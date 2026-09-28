@@ -88,7 +88,20 @@ function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classL
 function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
 function goHome(){showView('home',document.querySelector('.nav button'))}
 function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';const c=document.getElementById('choices');c.innerHTML='';p[3].forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>answer(b,i===p[4]);c.appendChild(b)})}
-function answer(btn,ok){document.querySelectorAll('.choice').forEach(b=>b.disabled=true);btn.classList.add(ok?'correct':'wrong');if(ok){document.getElementById('nextWrap').style.display='block';speak()}else{setTimeout(()=>{document.querySelectorAll('.choice')[data[scene].phrases[idx][4]].classList.add('correct')},250)}}
+function answer(btn,ok){
+  document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+  btn.classList.add(ok?'correct':'wrong');
+  const correctBtn=document.querySelectorAll('.choice')[data[scene].phrases[idx][4]];
+  if(ok){
+    document.getElementById('nextWrap').style.display='block';
+    speak();
+  }else{
+    setTimeout(()=>{
+      correctBtn.classList.add('correct');
+      document.getElementById('nextWrap').style.display='block';
+    },250);
+  }
+}
 function nextPhrase(){if(idx<data[scene].phrases.length-1){idx++;renderPhrase()}else{showView('practice');}}
 function speak(){
   const u=new SpeechSynthesisUtterance(data[scene].phrases[idx][0]);
