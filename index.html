@@ -15,6 +15,10 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .hero{background:#191919;color:white;border-radius:28px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"旅";position:absolute;right:-8px;bottom:-35px;font-size:150px;font-weight:900;color:#ffffff0d}.eyebrow{font-size:12px;color:#d7a49b;font-weight:700;letter-spacing:1px}.hero h1{font-size:32px;line-height:1.12;margin:8px 0}.hero p{color:#c9c9c9;margin:0 0 20px;line-height:1.5}.primary{background:var(--accent);color:#fff;padding:13px 18px;border-radius:14px;font-weight:700}
 .section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
 .lesson{display:none}.lesson.active{display:block}.topbar{display:flex;align-items:center;gap:10px;margin:12px 0 18px}.back{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:14px}.lesson-title{font-size:23px;font-weight:800}.progress{height:5px;background:#e4ddd5;border-radius:9px;margin:8px 0 20px}.progress i{display:block;height:100%;width:25%;background:var(--accent);border-radius:9px}.phrase-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin-bottom:14px}.jp{font-size:31px;font-weight:700;line-height:1.35}.romaji{color:#8b867f;margin-top:8px}.cn{font-size:18px;margin-top:14px}.listen{margin-top:20px;background:#f3ece8;border-radius:15px;padding:12px 15px;color:#a83829;font-weight:700}.choices{display:grid;gap:10px;margin-top:14px}.choice{background:#fff;border:1px solid var(--line);padding:15px;border-radius:15px;text-align:left}.choice.correct{border-color:var(--green);background:#edf8f2}.choice.wrong{border-color:#d85a4a;background:#fff0ed}
+.feedback{display:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
+.feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
+.repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
 .view{display:none}.view.active{display:block}.tip{font-size:13px;color:var(--muted);line-height:1.5;margin-top:10px}
 @media(max-width:360px){.jp{font-size:27px}.hero h1{font-size:28px}}
@@ -41,6 +45,12 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="progress"><i id="progress"></i></div>
 <div class="phrase-card"><div class="jp" id="jp"></div><div class="romaji" id="romaji"></div><div class="cn" id="cn"></div><button class="listen" onclick="speak()">🔊 听日语</button></div>
 <div class="section-title">你会怎么说？</div><div class="choices" id="choices"></div>
+<div id="feedback" class="feedback">
+  <div class="feedback-title" id="feedbackTitle"></div>
+  <div class="feedback-why" id="feedbackWhy"></div>
+  <button id="repeatBtn" class="repeat" onclick="repeatPhrase()">🎙️ 说一遍</button>
+  <div id="repeatStatus" class="repeat-status"></div>
+</div>
 <div id="nextWrap" style="display:none;margin-top:14px"><button class="primary" style="width:100%" onclick="nextPhrase()">下一句 →</button></div>
 </section>
 
@@ -87,20 +97,71 @@ let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
 function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
 function goHome(){showView('home',document.querySelector('.nav button'))}
-function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';const c=document.getElementById('choices');c.innerHTML='';p[3].forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>answer(b,i===p[4]);c.appendChild(b)})}
+function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';
+document.getElementById('feedback').classList.remove('show');
+document.getElementById('feedbackTitle').textContent='';
+document.getElementById('feedbackWhy').textContent='';
+document.getElementById('repeatStatus').textContent='';
+document.getElementById('repeatBtn').className='repeat';
+document.getElementById('repeatBtn').textContent='🎙️ 说一遍';
+const c=document.getElementById('choices');c.innerHTML='';p[3].forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>answer(b,i===p[4]);c.appendChild(b)})}
 function answer(btn,ok){
   document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
   btn.classList.add(ok?'correct':'wrong');
-  const correctBtn=document.querySelectorAll('.choice')[data[scene].phrases[idx][4]];
+  const p=data[scene].phrases[idx];
+  const correctBtn=document.querySelectorAll('.choice')[p[4]];
   if(ok){
     document.getElementById('nextWrap').style.display='block';
+    document.getElementById('feedback').classList.remove('show');
     speak();
   }else{
     setTimeout(()=>{
       correctBtn.classList.add('correct');
-      document.getElementById('nextWrap').style.display='block';
+      document.getElementById('feedback').classList.add('show');
+      document.getElementById('feedbackTitle').textContent='记住这一句：'+p[0];
+      document.getElementById('feedbackWhy').textContent='意思：'+p[2]+'  ·  旅行时直接说这句话就可以。先听一遍，再自己说一遍。';
+      speak();
     },250);
   }
+}
+
+function repeatPhrase(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const status=document.getElementById('repeatStatus');
+  const btn=document.getElementById('repeatBtn');
+  const target=data[scene].phrases[idx][0];
+  if(!SR){
+    status.textContent='当前 Safari 不支持语音识别，请直接跟读。';
+    return;
+  }
+  if(activeRecognition){try{activeRecognition.abort()}catch(e){} activeRecognition=null}
+  speechSynthesis.cancel();
+  btn.disabled=true; btn.textContent='🎙️ 准备中…'; status.textContent='准备麦克风…';
+  setTimeout(()=>{
+    const r=new SR(); activeRecognition=r;
+    r.lang='ja-JP';r.interimResults=false;r.continuous=false;r.maxAlternatives=3;
+    r.onstart=()=>{btn.textContent='🎙️ 正在听…';status.textContent='请说：'+target};
+    r.onresult=e=>{
+      const heard=e.results[0][0].transcript.trim();
+      activeRecognition=null;
+      const normalize=s=>s.replace(/[。！？!?、\s]/g,'');
+      const ok=normalize(heard)===normalize(target) || normalize(heard).includes(normalize(target).slice(0,Math.max(2,Math.floor(normalize(target).length*.65))));
+      if(ok){
+        btn.className='repeat done';btn.textContent='✓ 说对了！';status.textContent='识别到：'+heard;
+        document.getElementById('nextWrap').style.display='block';
+        const u=new SpeechSynthesisUtterance(target);u.lang='ja-JP';u.rate=.82;speechSynthesis.cancel();speechSynthesis.speak(u);
+      }else{
+        btn.disabled=false;btn.className='repeat';btn.textContent='🎙️ 再说一遍';
+        status.textContent='听到：「'+heard+'」  再试一次。';
+      }
+    };
+    r.onerror=e=>{
+      activeRecognition=null;btn.disabled=false;btn.className='repeat';btn.textContent='🎙️ 再说一遍';
+      status.textContent=e.error==='no-speech'?'没有听到声音，再试一次。':(e.error==='not-allowed'?'麦克风权限未开启。':'识别失败，再试一次。');
+    };
+    r.onend=()=>{if(activeRecognition===r)activeRecognition=null};
+    try{r.start()}catch(e){activeRecognition=null;btn.disabled=false;btn.textContent='🎙️ 再说一遍';status.textContent='启动失败，再试一次。'}
+  },700);
 }
 function nextPhrase(){if(idx<data[scene].phrases.length-1){idx++;renderPhrase()}else{showView('practice');}}
 function speak(){
