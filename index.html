@@ -82,17 +82,59 @@ shopping:{title:"购物 · 买东西",phrases:[
 ["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["現金でお願いします。","カードでお願いします。","お会計お願いします。"],1]]}
 };
 let scene="restaurant",idx=0;
+let lastSpeechEnd=0;
+let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
 function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
 function goHome(){showView('home',document.querySelector('.nav button'))}
 function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';const c=document.getElementById('choices');c.innerHTML='';p[3].forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>answer(b,i===p[4]);c.appendChild(b)})}
 function answer(btn,ok){document.querySelectorAll('.choice').forEach(b=>b.disabled=true);btn.classList.add(ok?'correct':'wrong');if(ok){document.getElementById('nextWrap').style.display='block';speak()}else{setTimeout(()=>{document.querySelectorAll('.choice')[data[scene].phrases[idx][4]].classList.add('correct')},250)}}
 function nextPhrase(){if(idx<data[scene].phrases.length-1){idx++;renderPhrase()}else{showView('practice');}}
-function speak(){const u=new SpeechSynthesisUtterance(data[scene].phrases[idx][0]);u.lang='ja-JP';u.rate=.82;speechSynthesis.cancel();speechSynthesis.speak(u)}
-function startVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('status').textContent='当前浏览器没有语音识别，请直接输入文字。';return}const r=new SR();r.lang='ja-JP';r.interimResults=false;r.maxAlternatives=1;document.getElementById('status').textContent='正在听…';r.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(t)+'</div>');document.getElementById('status').textContent='识别到：'+t;setTimeout(()=>{document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>ご注文はお決まりですか？</div>');const u=new SpeechSynthesisUtterance('いいですね！ご注文はお決まりですか？');u.lang='ja-JP';u.rate=.84;speechSynthesis.speak(u)},450)};r.onerror=()=>document.getElementById('status').textContent='没有听清，再试一次。';r.onend=()=>{};r.start()}
+function speak(){
+  const u=new SpeechSynthesisUtterance(data[scene].phrases[idx][0]);
+  u.lang='ja-JP';u.rate=.82;
+  u.onend=()=>{lastSpeechEnd=Date.now()};
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('status').textContent='当前浏览器没有语音识别，请直接输入文字。';return}
+  if(activeRecognition){try{activeRecognition.abort()}catch(e){} activeRecognition=null}
+  speechSynthesis.cancel();
+  const wait=Math.max(0,4000-(Date.now()-lastSpeechEnd));
+  document.getElementById('status').textContent=wait?'准备麦克风…':'正在听…';
+  setTimeout(()=>{
+    const r=new SR(); activeRecognition=r;
+    r.lang='ja-JP';r.interimResults=false;r.continuous=false;r.maxAlternatives=1;
+    r.onstart=()=>document.getElementById('status').textContent='正在听，请说日语…';
+    r.onresult=e=>{
+      const t=e.results[0][0].transcript;
+      document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(t)+'</div>');
+      document.getElementById('status').textContent='识别到：'+t;
+      r.abort(); activeRecognition=null;
+      setTimeout(()=>{
+        document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>ご注文はお決まりですか？</div>');
+        const u=new SpeechSynthesisUtterance('いいですね！ご注文はお決まりですか？');
+        u.lang='ja-JP';u.rate=.84;
+        u.onend=()=>{lastSpeechEnd=Date.now()};
+        speechSynthesis.cancel();speechSynthesis.speak(u);
+      },450);
+    };
+    r.onerror=e=>{
+      activeRecognition=null;
+      document.getElementById('status').textContent=e.error==='not-allowed'?'麦克风/语音识别权限未开启。':(e.error==='no-speech'?'没有听到声音，再试一次。':'语音识别暂时不可用，再试一次。');
+    };
+    r.onend=()=>{if(activeRecognition===r)activeRecognition=null};
+    try{r.start()}catch(e){activeRecognition=null;document.getElementById('status').textContent='语音识别启动失败，请再点一次。'}
+  },wait);
+}
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function buildPhrasebook(){const el=document.getElementById('phraseList');Object.values(data).forEach(group=>group.phrases.forEach(p=>{const d=document.createElement('div');d.className='phrase-card';d.innerHTML='<div class="jp">'+p[0]+'</div><div class="romaji">'+p[1]+'</div><div class="cn">'+p[2]+'</div><button class="listen" onclick="speakText('+JSON.stringify(p[0])+')">🔊 听日语</button>';el.appendChild(d)}))}
-function speakText(t){const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=.82;speechSynthesis.speak(u)}
+function speakText(t){
+  const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=.82;
+  u.onend=()=>{lastSpeechEnd=Date.now()};
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
 buildPhrasebook();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 </script>
