@@ -16,7 +16,11 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
 .lesson{display:none}.lesson.active{display:block}.topbar{display:flex;align-items:center;gap:10px;margin:12px 0 18px}.back{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:14px}.lesson-title{font-size:23px;font-weight:800}.progress{height:5px;background:#e4ddd5;border-radius:9px;margin:8px 0 20px}.progress i{display:block;height:100%;width:25%;background:var(--accent);border-radius:9px}.phrase-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin-bottom:14px}.jp{font-size:31px;font-weight:700;line-height:1.35}.romaji{color:#8b867f;margin-top:8px}.cn{font-size:18px;margin-top:14px}.listen{margin-top:20px;background:#f3ece8;border-radius:15px;padding:12px 15px;color:#a83829;font-weight:700}.choices{display:grid;gap:10px;margin-top:14px}.choice{background:#fff;border:1px solid var(--line);padding:15px;border-radius:15px;text-align:left}.choice.correct{border-color:var(--green);background:#edf8f2}.choice.wrong{border-color:#d85a4a;background:#fff0ed}
 .feedback{display:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
-.feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}
+.dialogue-good{border-color:var(--green);background:#edf8f2}
+.dialogue-bad{border-color:#d85a4a;background:#fff0ed}
+.dialogue-jp{font-size:22px;font-weight:800;margin-top:8px}
+.dialogue-cn{color:var(--muted);margin-top:6px;line-height:1.5}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
@@ -58,6 +62,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">情景对话</div></div>
 <div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div></div>
 <div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？</div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
+<div id="dialogueFeedback" class="feedback"></div>
 <button class="mic" id="mic" onclick="startVoice()">🎙️</button><div class="status" id="status">点击麦克风，用日语回答</div>
 <div class="tip" style="text-align:center">支持 iPhone Safari 的语音识别；也可以直接输入。</div>
 </section>
@@ -170,37 +175,77 @@ function speak(){
   u.onend=()=>{lastSpeechEnd=Date.now()};
   speechSynthesis.cancel();speechSynthesis.speak(u);
 }
+const dialogueTurns=[
+  {
+    question:'何名様ですか？',
+    answer:'2人です。',
+    alternatives:['二人です。','ふたりです。','2人です','二人です','ふたりです'],
+    chinese:'两位。',
+    next:'ご注文はお決まりですか？'
+  }
+];
+let dialogueTurn=0;
+
+function normalizeJapanese(s){
+  return s.replace(/[。！？!?、\s]/g,'').replace(/[0-9]/g,m=>String.fromCharCode(m.charCodeAt(0)+0));
+}
+function evaluateDialogue(heard,target,alternatives){
+  const h=normalizeJapanese(heard);
+  const all=[target,...alternatives].map(normalizeJapanese);
+  if(all.includes(h)) return true;
+  // Accept common speech-recognition variations for the key meaning.
+  if((h.includes('ふたり')||h.includes('二人')||h.includes('2人')) && h.includes('です')) return true;
+  return false;
+}
+function showDialogueFeedback(ok,heard,turn){
+  const box=document.getElementById('dialogueFeedback');
+  box.className='feedback show '+(ok?'dialogue-good':'dialogue-bad');
+  box.innerHTML=
+    '<div class="feedback-title">'+(ok?'✓ 说对了！':'△ 这句话和标准回答不一样')+'</div>'+
+    '<div class="feedback-why">我听到的是：</div>'+
+    '<div class="dialogue-jp">'+escapeHtml(heard)+'</div>'+
+    '<div class="feedback-why">推荐这样说：</div>'+
+    '<div class="dialogue-jp">'+turn.answer+'</div>'+
+    '<div class="dialogue-cn">'+turn.chinese+'</div>'+
+    (ok?'':'<div class="feedback-why" style="margin-top:10px">你刚才说的是「'+escapeHtml(heard)+'」，意思是“你叫什么名字”。店员问的是“几位”，所以这里要回答人数。</div>');
+}
 function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){document.getElementById('status').textContent='当前浏览器没有语音识别，请直接输入文字。';return}
   if(activeRecognition){try{activeRecognition.abort()}catch(e){} activeRecognition=null}
   speechSynthesis.cancel();
-  const wait=Math.max(0,4000-(Date.now()-lastSpeechEnd));
-  document.getElementById('status').textContent=wait?'准备麦克风…':'正在听…';
+  const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
+  const status=document.getElementById('status');
+  const mic=document.getElementById('mic');
+  status.textContent='准备麦克风…'; mic.disabled=true;
   setTimeout(()=>{
     const r=new SR(); activeRecognition=r;
-    r.lang='ja-JP';r.interimResults=false;r.continuous=false;r.maxAlternatives=1;
-    r.onstart=()=>document.getElementById('status').textContent='正在听，请说日语…';
+    r.lang='ja-JP';r.interimResults=false;r.continuous=false;r.maxAlternatives=3;
+    r.onstart=()=>{status.textContent='正在听，请回答：「'+turn.question+'」';mic.disabled=false};
     r.onresult=e=>{
-      const t=e.results[0][0].transcript;
-      document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(t)+'</div>');
-      document.getElementById('status').textContent='识别到：'+t;
-      r.abort(); activeRecognition=null;
-      setTimeout(()=>{
-        document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>ご注文はお決まりですか？</div>');
-        const u=new SpeechSynthesisUtterance('いいですね！ご注文はお決まりですか？');
-        u.lang='ja-JP';u.rate=.84;
-        u.onend=()=>{lastSpeechEnd=Date.now()};
-        speechSynthesis.cancel();speechSynthesis.speak(u);
-      },450);
+      const heard=e.results[0][0].transcript.trim();
+      activeRecognition=null;
+      const ok=evaluateDialogue(heard,turn.answer,turn.alternatives);
+      document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
+      status.textContent=ok?'✓ 回答正确':'需要再练一次';
+      showDialogueFeedback(ok,heard,turn);
+      if(ok){
+        setTimeout(()=>{
+          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+turn.next+'</div>');
+          const u=new SpeechSynthesisUtterance('いいですね！'+turn.next);
+          u.lang='ja-JP';u.rate=.84;u.onend=()=>{lastSpeechEnd=Date.now()};
+          speechSynthesis.cancel();speechSynthesis.speak(u);
+          dialogueTurn++;
+        },700);
+      }
     };
     r.onerror=e=>{
-      activeRecognition=null;
-      document.getElementById('status').textContent=e.error==='not-allowed'?'麦克风/语音识别权限未开启。':(e.error==='no-speech'?'没有听到声音，再试一次。':'语音识别暂时不可用，再试一次。');
+      activeRecognition=null;mic.disabled=false;
+      status.textContent=e.error==='no-speech'?'没有听到声音，再试一次。':(e.error==='not-allowed'?'麦克风权限未开启。':'识别失败，再试一次。');
     };
     r.onend=()=>{if(activeRecognition===r)activeRecognition=null};
-    try{r.start()}catch(e){activeRecognition=null;document.getElementById('status').textContent='语音识别启动失败，请再点一次。'}
-  },wait);
+    try{r.start()}catch(e){activeRecognition=null;mic.disabled=false;status.textContent='启动失败，再试一次。'}
+  },700);
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function buildPhrasebook(){const el=document.getElementById('phraseList');Object.values(data).forEach(group=>group.phrases.forEach(p=>{const d=document.createElement('div');d.className='phrase-card';d.innerHTML='<div class="jp">'+p[0]+'</div><div class="romaji">'+p[1]+'</div><div class="cn">'+p[2]+'</div><button class="listen" onclick="speakText('+JSON.stringify(p[0])+')">🔊 听日语</button>';el.appendChild(d)}))}
