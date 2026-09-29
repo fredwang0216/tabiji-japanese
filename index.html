@@ -50,7 +50,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="section-title">旅行场景</div>
 <div class="scenes">
 <button class="scene" onclick="openRestaurantHub()"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
-<button class="scene" onclick="openScene('hotel')"><div class="emoji">🏨</div><b>酒店</b><small>入住、行李、退房</small></button>
+<button class="scene" onclick="openHotelHub()"><div class="emoji">🏨</div><b>酒店</b><small>入住、行李、退房</small></button>
 <button class="scene" onclick="openScene('transport')"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
 <button class="scene" onclick="openScene('shopping')"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
@@ -128,6 +128,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">餐厅 · 场景训练</div></div>
 <div class="phrase-card"><b>🍜 选择你想练的场景</b><div class="tip">每个场景 8 句。先听、再说、最后做情景练习。</div></div>
 <div class="lesson-grid" id="restaurantLessonList"></div>
+</section>
+
+<section id="hotelHub" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">酒店 · 场景训练</div></div>
+<div class="phrase-card"><b>🏨 选择你想练的酒店场景</b><div class="tip">入住、行李、设施、房间问题、早餐、退房，一次覆盖。</div></div>
+<div class="lesson-grid" id="hotelLessonList"></div>
+<div class="plan-card" style="margin-top:12px"><b>🎭 酒店情景对话</b><p>从前台办理入住，一路练到退房。</p><button class="plan-btn" onclick="openHotelDialogue()">开始酒店对话</button></div>
 </section>
 
 <section id="lesson" class="view lesson">
@@ -270,6 +277,96 @@ hotel:{title:"酒店 · 入住",phrases:[
 ["チェックインお願いします。","Chekku-in onegai shimasu.","我要办理入住。",["チェックインお願いします。","おすすめは何ですか？","これください。"],0],
 ["Wi-Fiのパスワードは何ですか？","Wi-Fi no pasuwādo wa nan desu ka?","Wi-Fi 密码是什么？",["部屋はどこですか？","Wi-Fiのパスワードは何ですか？","駅はどこですか？"],1],
 ["荷物を預けたいです。","Nimotsu o azuketai desu.","我想寄存行李。",["荷物を預けたいです。","予約しています。","大丈夫です。"],0]]},
+hotel_arrival:{title:"到达与入住",phrases:[
+["予約しています。","Yoyaku shiteimasu.","我有预订。",["予約しています。","チェックアウトします。","荷物を預けたいです。"],0],
+["チェックインお願いします。","Chekku-in onegai shimasu.","我要办理入住。",["チェックインお願いします。","チェックアウトお願いします。","予約をキャンセルします。"],0],
+["名前は王です。","Namae wa Ō desu.","我姓王。",["名前は王です。","名前は田中です。","住所は東京です。"],0],
+["パスポートです。","Pasupōto desu.","这是护照。",["パスポートです。","カードです。","チケットです。"],0],
+["2泊です。","Nihaku desu.","住两晚。",["2泊です。","2人です。","2部屋です。"],0],
+["朝食付きですか？","Chōshoku-tsuki desu ka?","包含早餐吗？",["朝食付きですか？","朝食は何時ですか？","朝食はどこですか？"],0],
+["チェックインは何時ですか？","Chekku-in wa nanji desu ka?","几点可以入住？",["チェックインは何時ですか？","チェックアウトは何時ですか？","朝食は何時ですか？"],0],
+["部屋は何階ですか？","Heya wa nan-kai desu ka?","房间在几楼？",["部屋は何階ですか？","駅は何階ですか？","朝食は何階ですか？"],0]]},
+hotel_room:{title:"房间与设施",phrases:[
+["部屋はどこですか？","Heya wa doko desu ka?","房间在哪里？",["部屋はどこですか？","朝食はどこですか？","駅はどこですか？"],0],
+["エレベーターはどこですか？","Erebētā wa doko desu ka?","电梯在哪里？",["エレベーターはどこですか？","レストランはどこですか？","部屋はどこですか？"],0],
+["Wi-Fiのパスワードは何ですか？","Wi-Fi no pasuwādo wa nan desu ka?","Wi-Fi 密码是什么？",["Wi-Fiのパスワードは何ですか？","部屋番号は何ですか？","電話番号は何ですか？"],0],
+["朝食はどこですか？","Chōshoku wa doko desu ka?","早餐在哪里？",["朝食はどこですか？","部屋はどこですか？","駅はどこですか？"],0],
+["朝食は何時からですか？","Chōshoku wa nanji kara desu ka?","早餐几点开始？",["朝食は何時からですか？","朝食はどこですか？","チェックインは何時ですか？"],0],
+["ジムはありますか？","Jimu wa arimasu ka?","有健身房吗？",["ジムはありますか？","Wi-Fiはありますか？","タクシーはありますか？"],0],
+["ランドリーはありますか？","Randorī wa arimasu ka?","有洗衣房吗？",["ランドリーはありますか？","レストランはありますか？","ベッドはありますか？"],0],
+["自動販売機はどこですか？","Jidō hanbaiki wa doko desu ka?","自动售货机在哪里？",["自動販売機はどこですか？","エレベーターはどこですか？","フロントはどこですか？"],0]]},
+hotel_luggage:{title:"行李",phrases:[
+["荷物を預けたいです。","Nimotsu o azuketai desu.","我想寄存行李。",["荷物を預けたいです。","荷物を取りたいです。","部屋を予約したいです。"],0],
+["チェックイン前に荷物を預けてもいいですか？","Chekku-in mae ni nimotsu o azukete mo ii desu ka?","入住前可以寄存行李吗？",["チェックイン前に荷物を預けてもいいですか？","チェックアウト後に部屋を使えますか？","朝食を食べてもいいですか？"],0],
+["チェックアウト後に荷物を預けてもいいですか？","Chekku-auto go ni nimotsu o azukete mo ii desu ka?","退房后可以寄存行李吗？",["チェックアウト後に荷物を預けてもいいですか？","チェックイン前に部屋を使えますか？","荷物を買ってもいいですか？"],0],
+["荷物はどこで受け取れますか？","Nimotsu wa doko de uketoremasu ka?","在哪里取行李？",["荷物はどこで受け取れますか？","朝食はどこで食べられますか？","部屋はどこですか？"],0],
+["この荷物をお願いします。","Kono nimotsu o onegai shimasu.","麻烦帮我保管这件行李。",["この荷物をお願いします。","この部屋をお願いします。","この料理をお願いします。"],0],
+["荷物が一つあります。","Nimotsu ga hitotsu arimasu.","我有一件行李。",["荷物が一つあります。","部屋が一つあります。","予約が一つあります。"],0],
+["スーツケースを預けたいです。","Sūtsukēsu o azuketai desu.","我想寄存行李箱。",["スーツケースを預けたいです。","スーツケースを買いたいです。","スーツケースを開けたいです。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","おやすみなさい。","いただきます。"],0]]},
+hotel_room_problem:{title:"房间问题",phrases:[
+["部屋に問題があります。","Heya ni mondai ga arimasu.","房间有问题。",["部屋に問題があります。","部屋があります。","問題ありません。"],0],
+["エアコンが動きません。","Eakon ga ugokimasen.","空调不工作。",["エアコンが動きません。","エアコンがあります。","エアコンを使います。"],0],
+["テレビがつきません。","Terebi ga tsukimasen.","电视打不开。",["テレビがつきません。","テレビがあります。","テレビを見ます。"],0],
+["お湯が出ません。","O-yu ga demasen.","没有热水。",["お湯が出ません。","水があります。","お湯をください。"],0],
+["シャワーが使えません。","Shawā ga tsukaemasen.","淋浴不能用。",["シャワーが使えません。","シャワーがあります。","シャワーをお願いします。"],0],
+["部屋を変えてもらえますか？","Heya o kaete moraemasu ka?","可以帮我换房间吗？",["部屋を変えてもらえますか？","部屋を見てもらえますか？","部屋を予約してもらえますか？"],0],
+["鍵が開きません。","Kagi ga akimasen.","房门打不开。",["鍵が開きません。","鍵があります。","ドアを閉めます。"],0],
+["もう一度確認してもらえますか？","Mō ichido kakunin shite moraemasu ka?","可以再帮我确认一次吗？",["もう一度確認してもらえますか？","もう一度お願いします。","もう帰ります。"],0]]},
+hotel_requests:{title:"房间需求",phrases:[
+["タオルをもう一枚お願いします。","Taoru o mō ichimai onegai shimasu.","请再给我一条毛巾。",["タオルをもう一枚お願いします。","タオルを一枚返します。","毛布を返します。"],0],
+["枕をもう一つお願いします。","Makura o mō hitotsu onegai shimasu.","请再给我一个枕头。",["枕をもう一つお願いします。","枕を一つ返します。","部屋を一つお願いします。"],0],
+["毛布をお願いします。","Mōfu o onegai shimasu.","请给我一条毯子/被子。",["毛布をお願いします。","枕をお願いします。","タオルを返します。"],0],
+["水をお願いします。","Mizu o onegai shimasu.","请给我水。",["水をお願いします。","鍵をお願いします。","朝食をお願いします。"],0],
+["アメニティをお願いします。","Ameniti o onegai shimasu.","请给我洗漱用品。",["アメニティをお願いします。","アレルギーがあります。","チェックアウトをお願いします。"],0],
+["掃除をお願いします。","Sōji o onegai shimasu.","请打扫房间。",["掃除をお願いします。","朝食をお願いします。","予約をお願いします。"],0],
+["部屋を掃除しなくても大丈夫です。","Heya o sōji shinakute mo daijōbu desu.","房间不用打扫也可以。",["部屋を掃除しなくても大丈夫です。","部屋を掃除してください。","部屋を変えてください。"],0],
+["静かな部屋をお願いします。","Shizuka na heya o onegai shimasu.","请给我安静一点的房间。",["静かな部屋をお願いします。","大きな部屋をお願いします。","新しい部屋をお願いします。"],0]]},
+hotel_breakfast:{title:"早餐",phrases:[
+["朝食は含まれていますか？","Chōshoku wa fukumarete imasu ka?","包含早餐吗？",["朝食は含まれていますか？","朝食は終わりましたか？","朝食はありますか？"],0],
+["朝食は何時から何時までですか？","Chōshoku wa nanji kara nanji made desu ka?","早餐几点到几点？",["朝食は何時から何時までですか？","チェックインは何時からですか？","レストランは何階ですか？"],0],
+["朝食は何階ですか？","Chōshoku wa nan-kai desu ka?","早餐在几楼？",["朝食は何階ですか？","部屋は何階ですか？","フロントは何階ですか？"],0],
+["朝食券は必要ですか？","Chōshokuken wa hitsuyō desu ka?","需要早餐券吗？",["朝食券は必要ですか？","切符は必要ですか？","予約は必要ですか？"],0],
+["ここで食べます。","Koko de tabemasu.","我在这里吃。",["ここで食べます。","ここで待ちます。","ここで寝ます。"],0],
+["持ち帰ってもいいですか？","Mochikaette mo ii desu ka?","可以带走吗？",["持ち帰ってもいいですか？","チェックインしてもいいですか？","写真を撮ってもいいですか？"],0],
+["コーヒーをお願いします。","Kōhī o onegai shimasu.","请给我咖啡。",["コーヒーをお願いします。","コーヒーはどこですか？","水を返します。"],0],
+["ごちそうさまでした。","Gochisōsama deshita.","谢谢款待。",["ごちそうさまでした。","いただきます。","おやすみなさい。"],0]]},
+hotel_late_checkout:{title:"延迟入住与退房",phrases:[
+["アーリーチェックインできますか？","Ārī chekku-in dekimasu ka?","可以提前入住吗？",["アーリーチェックインできますか？","レイトチェックアウトできますか？","予約できますか？"],0],
+["レイトチェックアウトできますか？","Reito chekku-auto dekimasu ka?","可以延迟退房吗？",["レイトチェックアウトできますか？","アーリーチェックインできますか？","チェックインしています。"],0],
+["何時までですか？","Nanji made desu ka?","最晚到几点？",["何時までですか？","何名様ですか？","何泊ですか？"],0],
+["追加料金はいくらですか？","Tsuika ryōkin wa ikura desu ka?","需要额外多少钱？",["追加料金はいくらですか？","宿泊料金はいくらですか？","朝食はいくらですか？"],0],
+["1時間延長できますか？","Ichi-jikan enchō dekimasu ka?","可以延长一小时吗？",["1時間延長できますか？","1時間待てますか？","1時間予約できますか？"],0],
+["大丈夫です。","Daijōbu desu.","可以 / 没问题。",["大丈夫です。","お願いします。","すみません。"],0],
+["わかりました。","Wakarimashita.","明白了。",["わかりました。","わかりません。","ありがとうございます。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","おやすみなさい。","いただきます。"],0]]},
+hotel_checkout:{title:"退房",phrases:[
+["チェックアウトお願いします。","Chekku-auto onegai shimasu.","我要退房。",["チェックアウトお願いします。","チェックインお願いします。","予約お願いします。"],0],
+["部屋番号は205です。","Heya bangō wa ni-hyaku-go desu.","房间号是205。",["部屋番号は205です。","部屋は2階です。","予約番号は205です。"],0],
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","現金でお願いします。","レシートをください。"],0],
+["現金でお願いします。","Genkin de onegai shimasu.","请付现金。",["現金でお願いします。","カードでお願いします。","無料でお願いします。"],0],
+["レシートをください。","Reshīto o kudasai.","请给我收据。",["レシートをください。","鍵をください。","メニューをください。"],0],
+["領収書をください。","Ryōshūsho o kudasai.","请给我发票/收据。",["領収書をください。","予約をください。","荷物をください。"],0],
+["とても快適でした。","Totemo kaiteki deshita.","住得很舒服。",["とても快適でした。","とても遠かったです。","とても忙しかったです。"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢您。",["ありがとうございました。","いらっしゃいませ。","おやすみなさい。"],0]]},
+hotel_taxi:{title:"叫车与离店",phrases:[
+["タクシーを呼んでもらえますか？","Takushī o yonde moraemasu ka?","可以帮我叫出租车吗？",["タクシーを呼んでもらえますか？","タクシーを予約してもいいですか？","駅を呼んでもらえますか？"],0],
+["空港までお願いします。","Kūkō made onegai shimasu.","请送我去机场。",["空港までお願いします。","東京駅までお願いします。","ホテルまでお願いします。"],0],
+["何時に出発しますか？","Nanji ni shuppatsu shimasu ka?","几点出发？",["何時に出発しますか？","何時にチェックインしますか？","何時に食べますか？"],0],
+["タクシーは何時に来ますか？","Takushī wa nanji ni kimasu ka?","出租车几点来？",["タクシーは何時に来ますか？","朝食は何時に来ますか？","荷物は何時に来ますか？"],0],
+["荷物を部屋から持ってきてもらえますか？","Nimotsu o heya kara motte kite moraemasu ka?","可以帮我把行李从房间拿下来吗？",["荷物を部屋から持ってきてもらえますか？","部屋を持ってきてもらえますか？","タクシーを持ってきてもらえますか？"],0],
+["このホテルの住所を教えてください。","Kono hoteru no jūsho o oshiete kudasai.","请告诉我这家酒店的地址。",["このホテルの住所を教えてください。","このホテルの名前を教えてください。","このホテルの部屋を教えてください。"],0],
+["地図を見せてもらえますか？","Chizu o misete moraemasu ka?","可以给我看一下地图吗？",["地図を見せてもらえますか？","写真を見せてもらえますか？","部屋を見せてもらえますか？"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢您。",["ありがとうございました。","おはようございます。","いただきます。"],0]]},
+hotel_general:{title:"酒店常用",phrases:[
+["フロントはどこですか？","Furonto wa doko desu ka?","前台在哪里？",["フロントはどこですか？","部屋はどこですか？","駅はどこですか？"],0],
+["レストランはどこですか？","Resutoran wa doko desu ka?","餐厅在哪里？",["レストランはどこですか？","フロントはどこですか？","駅はどこですか？"],0],
+["コンビニは近くにありますか？","Konbini wa chikaku ni arimasu ka?","附近有便利店吗？",["コンビニは近くにありますか？","レストランは近くにありますか？","駅は何階ですか？"],0],
+["近くにおすすめのレストランはありますか？","Chikaku ni osusume no resutoran wa arimasu ka?","附近有推荐的餐厅吗？",["近くにおすすめのレストランはありますか？","近くにホテルはありますか？","朝食はおすすめですか？"],0],
+["荷物を部屋まで運んでもらえますか？","Nimotsu o heya made hakonde moraemasu ka?","可以帮我把行李送到房间吗？",["荷物を部屋まで運んでもらえますか？","部屋を運んでもらえますか？","荷物を買ってもらえますか？"],0],
+["日本語があまり話せません。","Nihongo ga amari hanasemasen.","我不太会说日语。",["日本語があまり話せません。","日本語が上手です。","英語が話せません。"],0],
+["ゆっくり話してください。","Yukkuri hanashite kudasai.","请说慢一点。",["ゆっくり話してください。","もう一度話してください。","静かにしてください。"],0],
+["もう一度お願いします。","Mō ichido onegai shimasu.","请再说一次。",["もう一度お願いします。","もう帰ります。","もう食べません。"],0]]},
 transport:{title:"交通 · 车站",phrases:[
 ["東京駅はどこですか？","Tōkyō-eki wa doko desu ka?","东京站在哪里？",["東京駅はどこですか？","これは何ですか？","何名様ですか？"],0],
 ["この電車は新宿に行きますか？","Kono densha wa Shinjuku ni ikimasu ka?","这班电车去新宿吗？",["切符はいくらですか？","この電車は新宿に行きますか？","予約しています。"],1],
@@ -401,6 +498,32 @@ function setTripPlan(days){
   const el=document.getElementById('tripPlanResult');
   el.innerHTML='<div class="section-label">'+days+' 天计划</div><div class="plan-card"><p>每天约 10 分钟。先听核心表达，再做选择题，最后开口完成情景对话。</p><ol class="plan-list">'+list.map(x=>'<li><b>'+x[0]+' '+x[1]+'</b><br><small>'+x[2]+'</small></li>').join('')+'</ol><button class="plan-btn" onclick="goHome()">开始今天的学习</button></div>';
 }
+const hotelLessons=[
+ ['hotel_arrival','🛎️ 到达与入住','预订、护照、入住、房间'],
+ ['hotel_room','🛏️ 房间与设施','Wi-Fi、早餐、电梯、设施'],
+ ['hotel_luggage','🧳 行李','入住前后寄存、领取行李'],
+ ['hotel_room_problem','🆘 房间问题','空调、热水、电视、钥匙'],
+ ['hotel_requests','🧺 房间需求','毛巾、枕头、清洁、安静房间'],
+ ['hotel_breakfast','🍳 早餐','时间、地点、早餐券、咖啡'],
+ ['hotel_late_checkout','⏰ 提前入住 / 延迟退房','时间、费用、延长'],
+ ['hotel_checkout','💳 退房','付款、收据、房间号'],
+ ['hotel_taxi','🚕 叫车与离店','机场、出租车、行李'],
+ ['hotel_general','🏨 酒店常用','前台、附近设施、沟通救命句']
+];
+function openHotelHub(){
+ showView('hotelHub');
+ document.getElementById('hotelLessonList').innerHTML=hotelLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
+}
+const hotelDialogue=[
+ {question:'ご予約のお名前をお願いします。',questionRomaji:'Go-yoyaku no onamae o onegai shimasu.',questionChinese:'请告诉我预订姓名。',answer:'王です。',answerRomaji:'Ō desu.',alternatives:['王です','ワンです。','ワンです'],chinese:'我姓王。',next:'パスポートをお願いします。',hint:'告诉前台你的姓氏。'},
+ {question:'パスポートをお願いします。',questionRomaji:'Pasupōto o onegai shimasu.',questionChinese:'请出示护照。',answer:'はい、どうぞ。',answerRomaji:'Hai, dōzo.',alternatives:['はい、どうぞ','どうぞ。'],chinese:'好的，给您。',next:'何泊ですか？',hint:'递给对方时说“请”。'},
+ {question:'何泊ですか？',questionRomaji:'Nanpaku desu ka?',questionChinese:'住几晚？',answer:'2泊です。',answerRomaji:'Nihaku desu.',alternatives:['二泊です。','2泊です'],chinese:'两晚。',next:'朝食は含まれていますか？',hint:'回答入住晚数。'},
+ {question:'朝食は含まれていますか？',questionRomaji:'Chōshoku wa fukumarete imasu ka?',questionChinese:'包含早餐吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请安排。',next:'チェックインは何時ですか？',hint:'简单回答“はい、お願いします”。'},
+ {question:'チェックインは何時ですか？',questionRomaji:'Chekku-in wa nanji desu ka?',questionChinese:'几点可以入住？',answer:'3時です。',answerRomaji:'Sanji desu.',alternatives:['3時です','三時です。'],chinese:'3点。',next:'Wi-Fiのパスワードは何ですか？',hint:'回答时间即可。'},
+ {question:'Wi-Fiのパスワードは何ですか？',questionRomaji:'Wi-Fi no pasuwādo wa nan desu ka?',questionChinese:'Wi-Fi 密码是什么？',answer:'教えてください。',answerRomaji:'Oshiete kudasai.',alternatives:['教えてください','お願いします。'],chinese:'请告诉我。',next:'ありがとうございます。',hint:'说“请告诉我”。'},
+ {question:'ありがとうございます。',questionRomaji:'Arigatō gozaimasu.',questionChinese:'谢谢。',answer:'こちらこそ。',answerRomaji:'Kochira koso.',alternatives:['こちらこそ。','ありがとうございます。'],chinese:'我也谢谢您。',next:'またお越しください。',hint:'回应感谢可以说“こちらこそ”。'},
+ {question:'またお越しください。',questionRomaji:'Mata o-koshi kudasai.',questionChinese:'欢迎下次再来。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢您。',next:'',hint:'离开时礼貌道谢。'}
+];
 const restaurantLessons=[
  ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
  ['restaurant_order','🍜 点餐','点菜、推荐、数量'],
@@ -494,7 +617,7 @@ function speak(){
   u.onend=()=>{lastSpeechEnd=Date.now()};
   speechSynthesis.cancel();speechSynthesis.speak(u);
 }
-const dialogueTurns=[
+let dialogueTurns=[
   {
     question:'何名様ですか？',
     questionRomaji:'Nan-mei-sama desu ka?',
@@ -573,9 +696,16 @@ const dialogueTurns=[
     hint:'表示用信用卡付款。'
   }
 ];
+let dialogueMode='restaurant';
 let dialogueTurn=0;
 let dialogueResults=[];
 
+function openHotelDialogue(){
+ dialogueMode='hotel'; dialogueTurns=hotelDialogue; dialogueTurn=0; dialogueResults=[];
+ showView('practice');
+ document.querySelector('#practice .lesson-title').textContent='酒店情景对话';
+ resetDialogue();
+}
 function speakDialogueQuestion(turnIndex){
   const turn=dialogueTurns[turnIndex]||dialogueTurns[0];
   speechSynthesis.cancel();
@@ -603,6 +733,7 @@ function evaluateDialogue(heard,turn){
     [/以上|はい/,/以上|はい/],
     [/カード/,/お願い|で/]
   ];
+  if(dialogueMode!=='restaurant') return false;
   const rule=rules[dialogueTurn];
   return rule ? rule.every(re=>re.test(h)) : false;
 }
@@ -644,13 +775,14 @@ function submitTextAnswer(){
 }
 function resetDialogue(){
   dialogueTurn=0; dialogueResults=[];
-  document.getElementById('chat').innerHTML='<div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div>';
+  const first=dialogueTurns[0];
+  document.getElementById('chat').innerHTML='<div class="bubble ai">'+first.question+'<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（'+first.questionChinese+'）</div>';
   document.getElementById('dialogueFeedback').className='feedback';
   document.getElementById('dialogueHint').style.display='none';
   document.getElementById('answerInput').value='';
   document.getElementById('dialogueReview').className='feedback';
   document.getElementById('dialogueProgress').style.width='14.28%';
-  document.getElementById('dialogueStep').textContent='第 1 / 7 轮';
+  document.getElementById('dialogueStep').textContent='第 1 / '+dialogueTurns.length+' 轮';
   document.getElementById('status').textContent='点击麦克风，用日语回答';
   document.getElementById('mic').disabled=false;
 }
@@ -658,7 +790,7 @@ function showDialogueReview(){
   const box=document.getElementById('dialogueReview');
   const correct=dialogueResults.filter(x=>x.ok).length;
   box.className='feedback show';
-  let html='<div class="feedback-title">🎉 餐厅对话完成</div><div class="dialogue-cn">你完成了 7 轮，其中 '+correct+' 轮直接说对。</div>';
+  let html='<div class="feedback-title">🎉 '+(dialogueMode==='hotel'?'酒店':'餐厅')+'对话完成</div><div class="dialogue-cn">你完成了 '+dialogueTurns.length+' 轮，其中 '+correct+' 轮直接说对。</div>';
   dialogueResults.forEach((x,i)=>{
     html+='<div class="review-item"><div class="'+(x.ok?'review-ok':'review-bad')+'">'+(x.ok?'✓ 第 '+(i+1)+' 轮':'△ 第 '+(i+1)+' 轮')+'</div><div class="review-jp">'+x.answer+'</div><div class="review-sub">'+x.romaji+' · '+x.chinese+'</div></div>';
   });
@@ -684,7 +816,7 @@ recordLessonResult('restaurant_dialogue',dialogueTurn,ok,'speak');
       dialogueTurn++;
       document.getElementById('dialogueProgress').style.width=((dialogueTurn/dialogueTurns.length)*100)+'%';
       document.getElementById('dialogueStep').textContent=isLast?'🎉 7 / 7 轮完成':('第 '+(dialogueTurn+1)+' / '+dialogueTurns.length+' 轮');
-      if(isLast){document.getElementById('status').textContent='🎉 餐厅对话完成！';document.getElementById('mic').disabled=true;showDialogueReview();}
+      if(isLast){document.getElementById('status').textContent='🎉 '+(dialogueMode==='hotel'?'酒店':'餐厅')+'对话完成！';document.getElementById('mic').disabled=true;showDialogueReview();}
     },700);
   }
 }
