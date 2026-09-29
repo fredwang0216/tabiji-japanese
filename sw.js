@@ -1,4 +1,4 @@
-const CACHE='tabiji-v11';
+const CACHE='tabiji-v12';
 self.addEventListener('install',e=>{
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/','/index.html','/manifest.webmanifest'])));
