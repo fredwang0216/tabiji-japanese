@@ -52,7 +52,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <button class="scene" onclick="openRestaurantHub()"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
 <button class="scene" onclick="openHotelHub()"><div class="emoji">🏨</div><b>酒店</b><small>入住、行李、退房</small></button>
 <button class="scene" onclick="openTransportHub()"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
-<button class="scene" onclick="openScene('shopping')"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
+<button class="scene" onclick="openShoppingHub()"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
 </section>
@@ -142,6 +142,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="phrase-card"><b>🚆 选择你想练的交通场景</b><div class="tip">车站、买票、换乘、新干线、出租车、问路，一次覆盖。</div></div>
 <div class="lesson-grid" id="transportLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 车站情景对话</b><p>从进站买票，到确认站台、换乘、到达目的地。</p><button class="plan-btn" onclick="openTransportDialogue()">开始交通对话</button></div>
+</section>
+
+<section id="shoppingHub" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">购物 · 场景训练</div></div>
+<div class="phrase-card"><b>🛍️ 选择你想练的购物场景</b><div class="tip">服装、价格、免税、付款、便利店、伴手礼、退换货，一次覆盖。</div></div>
+<div class="lesson-grid" id="shoppingLessonList"></div>
+<div class="plan-card" style="margin-top:12px"><b>🎭 购物情景对话</b><p>从进店询价，到试穿、免税、付款。</p><button class="plan-btn" onclick="openShoppingDialogue()">开始购物对话</button></div>
 </section>
 
 <section id="lesson" class="view lesson">
@@ -468,10 +475,114 @@ transport_access:{title:"IC卡与进出站",phrases:[
 ["どこでチャージできますか？","Doko de chāji dekimasu ka?","在哪里可以充值？",["どこでチャージできますか？","どこで食べられますか？","どこで寝られますか？"],0],
 ["入場できますか？","Nyūjō dekimasu ka?","可以进站吗？",["入場できますか？","入場は何人ですか？","入場はいくら食べますか？"],0],
 ["出場できません。","Shutsujō dekimasen.","出不了站。",["出場できません。","出場できます。","出場しました。"],0]]},
-shopping:{title:"购物 · 买东西",phrases:[
-["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","おすすめは何ですか？","大丈夫です。"],0],
-["これを試着してもいいですか？","Kore o shichaku shite mo ii desu ka?","可以试穿这个吗？",["これを試着してもいいですか？","これをください。","予約しています。"],0],
-["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["現金でお願いします。","カードでお願いします。","お会計お願いします。"],1]]}
+shopping_clothes:{title:"服装与试穿",phrases:[
+["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","これは何ですか？","大丈夫です。"],0],
+["これを試着してもいいですか？","Kore o shichaku shite mo ii desu ka?","可以试穿这个吗？",["これを試着してもいいですか？","これをください。","これを返します。"],0],
+["試着室はどこですか？","Shichakushitsu wa doko desu ka?","试衣间在哪里？",["試着室はどこですか？","レジはどこですか？","入口はどこですか？"],0],
+["Mサイズはありますか？","M-saizu wa arimasu ka?","有 M 码吗？",["Mサイズはありますか？","Mサイズはいくらですか？","Mサイズはどこですか？"],0],
+["Lサイズをお願いします。","Eru-saizu o onegai shimasu.","请给我 L 码。",["Lサイズをお願いします。","Lサイズを返します。","Lサイズを食べます。"],0],
+["もう少し大きいサイズはありますか？","Mō sukoshi ōkii saizu wa arimasu ka?","有大一点的尺码吗？",["もう少し大きいサイズはありますか？","もう少し安いサイズはありますか？","もう少し小さい店はありますか？"],0],
+["もう少し小さいサイズはありますか？","Mō sukoshi chiisai saizu wa arimasu ka?","有小一点的尺码吗？",["もう少し小さいサイズはありますか？","もう少し安いサイズはありますか？","もう少し遠いサイズはありますか？"],0],
+["これにします。","Kore ni shimasu.","我就要这个。",["これにします。","これを見ます。","これを返します。"],0]]},
+shopping_price:{title:"价格与优惠",phrases:[
+["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","これはどこですか？","これは何時ですか？"],0],
+["少し高いです。","Sukoshi takai desu.","有点贵。",["少し高いです。","少し安いです。","少し遠いです。"],0],
+["もう少し安くなりますか？","Mō sukoshi yasuku narimasu ka?","可以再便宜一点吗？",["もう少し安くなりますか？","もう少し大きくなりますか？","もう少し遠くなりますか？"],0],
+["セールですか？","Sēru desu ka?","这是打折商品吗？",["セールですか？","無料ですか？","予約ですか？"],0],
+["割引はありますか？","Waribiki wa arimasu ka?","有折扣吗？",["割引はありますか？","在庫はありますか？","袋はありますか？"],0],
+["二つ買うと安くなりますか？","Futatsu kau to yasuku narimasu ka?","买两个会便宜吗？",["二つ買うと安くなりますか？","二つ買うと大きくなりますか？","二つ買うと遠くなりますか？"],0],
+["一番安いものはどれですか？","Ichiban yasui mono wa dore desu ka?","最便宜的是哪个？",["一番安いものはどれですか？","一番新しいものはどれですか？","一番遠いものはどれですか？"],0],
+["予算は一万円です。","Yosan wa ichiman-en desu.","预算是一万日元。",["予算は一万円です。","住所は一万円です。","サイズは一万円です。"],0]]},
+shopping_stock:{title:"库存与颜色",phrases:[
+["これはありますか？","Kore wa arimasu ka?","这个有货吗？",["これはありますか？","これはいくらですか？","これは何時ですか？"],0],
+["黒はありますか？","Kuro wa arimasu ka?","有黑色吗？",["黒はありますか？","黒はいくらですか？","黒はどこですか？"],0],
+["白はありますか？","Shiro wa arimasu ka?","有白色吗？",["白はありますか？","白はいくらですか？","白は何時ですか？"],0],
+["別の色はありますか？","Betsu no iro wa arimasu ka?","有其他颜色吗？",["別の色はありますか？","別の店はいくらですか？","別のサイズは何時ですか？"],0],
+["別のサイズはありますか？","Betsu no saizu wa arimasu ka?","有其他尺码吗？",["別のサイズはありますか？","別の色はいくらですか？","別の店はどこですか？"],0],
+["在庫はありますか？","Zaiko wa arimasu ka?","有库存吗？",["在庫はありますか？","在庫はいくらですか？","在庫は何時ですか？"],0],
+["これが最後ですか？","Kore ga saigo desu ka?","这是最后一个吗？",["これが最後ですか？","これが無料ですか？","これが新しいですか？"],0],
+["取り寄せできますか？","Tori-yose dekimasu ka?","可以调货吗？",["取り寄せできますか？","取り替えできますか？","取り消しできますか？"],0]]},
+shopping_goods:{title:"商品与功能",phrases:[
+["これは何ですか？","Kore wa nan desu ka?","这是什么？",["これは何ですか？","これはいくらですか？","これはどこですか？"],0],
+["これは何に使いますか？","Kore wa nani ni tsukaimasu ka?","这个是做什么用的？",["これは何に使いますか？","これは何時に使いますか？","これは何人に使いますか？"],0],
+["使い方を教えてください。","Tsukaikata o oshiete kudasai.","请告诉我怎么用。",["使い方を教えてください。","買い方を教えてください。","行き方を教えてください。"],0],
+["おすすめはどれですか？","Osusume wa dore desu ka?","推荐哪个？",["おすすめはどれですか？","おすすめはどこですか？","おすすめはいくらですか？"],0],
+["人気なのはどれですか？","Ninki na no wa dore desu ka?","哪个比较受欢迎？",["人気なのはどれですか？","人気なのはどこですか？","人気なのはいくらですか？"],0],
+["日本製ですか？","Nihon-sei desu ka?","是日本制造的吗？",["日本製ですか？","日本人ですか？","日本語ですか？"],0],
+["保証はありますか？","Hoshō wa arimasu ka?","有保修吗？",["保証はありますか？","予約はありますか？","袋はありますか？"],0],
+["説明書はありますか？","Setsumeisho wa arimasu ka?","有说明书吗？",["説明書はありますか？","説明書はいくらですか？","説明書は何時ですか？"],0]]},
+shopping_taxfree:{title:"免税",phrases:[
+["免税できますか？","Menzei dekimasu ka?","可以免税吗？",["免税できますか？","免税はありますか？","免税はいくらですか？"],0],
+["免税カウンターはどこですか？","Menzei kauntā wa doko desu ka?","免税柜台在哪里？",["免税カウンターはどこですか？","レジはどこですか？","入口はどこですか？"],0],
+["パスポートが必要ですか？","Pasupōto ga hitsuyō desu ka?","需要护照吗？",["パスポートが必要ですか？","パスポートはいくらですか？","パスポートはどこですか？"],0],
+["いくらから免税ですか？","Ikura kara menzei desu ka?","消费满多少可以免税？",["いくらから免税ですか？","いくらから割引ですか？","いくらから予約ですか？"],0],
+["免税の手続きをお願いします。","Menzei no tetsuzuki o onegai shimasu.","请帮我办理免税手续。",["免税の手続きをお願いします。","返品の手続きをお願いします。","支払いの手続きをお願いします。"],0],
+["これは免税対象ですか？","Kore wa menzei taishō desu ka?","这个商品可以免税吗？",["これは免税対象ですか？","これは返品対象ですか？","これは予約対象ですか？"],0],
+["パスポートを見せます。","Pasupōto o misemasu.","我出示护照。",["パスポートを見せます。","パスポートを買います。","パスポートを返します。"],0],
+["わかりました。","Wakarimashita.","明白了。",["わかりました。","わかりません。","お願いします。"],0]]},
+shopping_payment:{title:"付款",phrases:[
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","現金でお願いします。","レシートをお願いします。"],0],
+["現金でお願いします。","Genkin de onegai shimasu.","请付现金。",["現金でお願いします。","カードでお願いします。","無料でお願いします。"],0],
+["電子マネーは使えますか？","Denshi manē wa tsukaemasu ka?","可以使用电子支付吗？",["電子マネーは使えますか？","電子マネーはありますか？","電子マネーはいくらですか？"],0],
+["クレジットカードは使えますか？","Kurejitto kādo wa tsukaemasu ka?","可以使用信用卡吗？",["クレジットカードは使えますか？","クレジットカードはありますか？","クレジットカードはいくらですか？"],0],
+["分けて払えますか？","Wakete haraemasu ka?","可以分开付款吗？",["分けて払えますか？","分けて買えますか？","分けて使えますか？"],0],
+["タッチ決済できますか？","Tacchi kessai dekimasu ka?","可以感应支付吗？",["タッチ決済できますか？","タッチ決済はありますか？","タッチ決済はいくらですか？"],0],
+["レシートをください。","Reshīto o kudasai.","请给我小票。",["レシートをください。","レシートを返します。","レシートを見せます。"],0],
+["袋をください。","Fukuro o kudasai.","请给我袋子。",["袋をください。","袋を返します。","袋を見せます。"],0]]},
+shopping_bag:{title:"袋子与包装",phrases:[
+["袋は有料ですか？","Fukuro wa yūryō desu ka?","袋子收费吗？",["袋は有料ですか？","袋は無料ですか？","袋は何時ですか？"],0],
+["袋を一枚ください。","Fukuro o ichimai kudasai.","请给我一个袋子。",["袋を一枚ください。","袋を一つ返します。","袋を二枚食べます。"],0],
+["袋は大丈夫です。","Fukuro wa daijōbu desu.","不用袋子。",["袋は大丈夫です。","袋をお願いします。","袋はあります。"],0],
+["別々に包んでください。","Betsubetsu ni tsutsunde kudasai.","请分开包装。",["別々に包んでください。","別々に払ってください。","別々に見てください。"],0],
+["一つにまとめてください。","Hitotsu ni matomete kudasai.","请合并包装。",["一つにまとめてください。","一つに払ってください。","一つに見てください。"],0],
+["プレゼント用にお願いします。","Purezento-yō ni onegai shimasu.","请按礼物包装。",["プレゼント用にお願いします。","プレゼントを買います。","プレゼントを返します。"],0],
+["箱に入れてください。","Hako ni irete kudasai.","请放进盒子里。",["箱に入れてください。","箱を買ってください。","箱を返してください。"],0],
+["壊れないようにしてください。","Kowarenai yō ni shite kudasai.","请包装好，避免损坏。",["壊れないようにしてください。","壊してもいいです。","壊れたらください。"],0]]},
+shopping_return:{title:"退换货",phrases:[
+["返品できますか？","Henpin dekimasu ka?","可以退货吗？",["返品できますか？","返金できますか？","交換できますか？"],0],
+["交換できますか？","Kōkan dekimasu ka?","可以换货吗？",["交換できますか？","返品できますか？","確認できますか？"],0],
+["サイズを交換したいです。","Saizu o kōkan shitai desu.","我想换尺码。",["サイズを交換したいです。","サイズを買いたいです。","サイズを食べたいです。"],0],
+["色を交換したいです。","Iro o kōkan shitai desu.","我想换颜色。",["色を交換したいです。","色を買いたいです。","色を食べたいです。"],0],
+["返金できますか？","Henkin dekimasu ka?","可以退款吗？",["返金できますか？","返品できますか？","予約できますか？"],0],
+["レシートが必要ですか？","Reshīto ga hitsuyō desu ka?","需要小票吗？",["レシートが必要ですか？","レシートはいくらですか？","レシートはどこですか？"],0],
+["購入したばかりです。","Kōnyū shita bakari desu.","我刚买的。",["購入したばかりです。","購入していません。","購入したくないです。"],0],
+["こちらで大丈夫です。","Kochira de daijōbu desu.","这样就可以了。",["こちらで大丈夫です。","こちらはいくらですか？","こちらはどこですか？"],0]]},
+shopping_convenience:{title:"便利店购物",phrases:[
+["これをください。","Kore o kudasai.","请给我这个。",["これをください。","これを返します。","これを見せます。"],0],
+["温めてもらえますか？","Atatamete moraemasu ka?","可以帮我加热吗？",["温めてもらえますか？","冷やしてもらえますか？","包んでもらえますか？"],0],
+["お箸をください。","O-hashi o kudasai.","请给我筷子。",["お箸をください。","お水をください。","お皿を返します。"],0],
+["スプーンをください。","Supūn o kudasai.","请给我勺子。",["スプーンをください。","スプーンを返します。","スプーンを見せます。"],0],
+["袋に入れてください。","Fukuro ni irete kudasai.","请装进袋子里。",["袋に入れてください。","袋を返してください。","袋を見てください。"],0],
+["このままで大丈夫です。","Kono mama de daijōbu desu.","这样就可以了。",["このままで大丈夫です。","このまま返します。","このまま食べません。"],0],
+["ポイントカードはありますか？","Pointo kādo wa arimasu ka?","有积分卡吗？",["ポイントカードはありますか？","ポイントカードはいくらですか？","ポイントカードはどこですか？"],0],
+["レシートをください。","Reshīto o kudasai.","请给我小票。",["レシートをください。","レシートを返します。","レシートを買います。"],0]]},
+shopping_gift:{title:"礼物与伴手礼",phrases:[
+["お土産におすすめはどれですか？","Omiyage ni osusume wa dore desu ka?","推荐哪种作为伴手礼？",["お土産におすすめはどれですか？","お土産はどこですか？","お土産はいくらですか？"],0],
+["人気のお土産はどれですか？","Ninki no omiyage wa dore desu ka?","受欢迎的伴手礼是哪种？",["人気のお土産はどれですか？","人気のお土産はどこですか？","人気のお土産は何時ですか？"],0],
+["日持ちしますか？","Himochi shimasu ka?","保质期长吗？",["日持ちしますか？","日持ちはどこですか？","日持ちはいくらですか？"],0],
+["常温で大丈夫ですか？","Jōon de daijōbu desu ka?","常温保存可以吗？",["常温で大丈夫ですか？","常温はいくらですか？","常温はどこですか？"],0],
+["持ち帰りやすいですか？","Mochikaeri yasui desu ka?","方便带回去吗？",["持ち帰りやすいですか？","持ち帰りはいくらですか？","持ち帰りは何時ですか？"],0],
+["これは日本のお土産ですか？","Kore wa Nihon no omiyage desu ka?","这是日本的伴手礼吗？",["これは日本のお土産ですか？","これは日本のホテルですか？","これは日本の駅ですか？"],0],
+["三つください。","Mittsu kudasai.","请给我三个。",["三つください。","三つ返します。","三つ食べます。"],0],
+["プレゼントにしたいです。","Purezento ni shitai desu.","我想买来送人。",["プレゼントにしたいです。","プレゼントを返したいです。","プレゼントを食べたいです。"],0]]},
+shopping_departure:{title:"结账与离店",phrases:[
+["これにします。","Kore ni shimasu.","我就买这个。",["これにします。","これを返します。","これを見ます。"],0],
+["全部でいくらですか？","Zenbu de ikura desu ka?","一共多少钱？",["全部でいくらですか？","全部で何時ですか？","全部でどこですか？"],0],
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","カードを返します。","カードを見せます。"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢您。",["ありがとうございました。","いらっしゃいませ。","いただきます。"],0],
+["また来ます。","Mata kimasu.","我还会再来。",["また来ます。","また食べます。","また寝ます。"],0],
+["大丈夫です。","Daijōbu desu.","没问题。",["大丈夫です。","お願いします。","すみません。"],0],
+["これをください。","Kore o kudasai.","请给我这个。",["これをください。","これを返します。","これを捨てます。"],0],
+["お願いします。","Onegai shimasu.","麻烦了 / 好的。",["お願いします。","おやすみなさい。","いただきます。"],0]]},
+shopping_general:{title:"购物沟通",phrases:[
+["見せてもらえますか？","Misete moraemasu ka?","可以给我看看吗？",["見せてもらえますか？","食べてもらえますか？","買ってもらえますか？"],0],
+["触ってもいいですか？","Sawatte mo ii desu ka?","可以摸一下吗？",["触ってもいいですか？","食べてもいいですか？","買ってもいいですか？"],0],
+["写真を撮ってもいいですか？","Shashin o totte mo ii desu ka?","可以拍照吗？",["写真を撮ってもいいですか？","写真を買ってもいいですか？","写真を食べてもいいですか？"],0],
+["これは本物ですか？","Kore wa honmono desu ka?","这个是真的吗？",["これは本物ですか？","これは無料ですか？","これは予約ですか？"],0],
+["新品ですか？","Shinpin desu ka?","是新品吗？",["新品ですか？","新宿ですか？","新品はいくらですか？"],0],
+["中古ですか？","Chūko desu ka?","是二手的吗？",["中古ですか？","中古はいくらですか？","中古はどこですか？"],0],
+["少し考えます。","Sukoshi kangaemasu.","我考虑一下。",["少し考えます。","少し買います。","少し食べます。"],0],
+["今回はやめておきます。","Konkai wa yamete okimasu.","这次先不买了。",["今回はやめておきます。","今回は買っておきます。","今回は食べておきます。"],0]]}
 };
 let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
@@ -646,6 +757,34 @@ const transportDialogue=[
  {question:'何線に乗り換えますか？',questionRomaji:'Nan-sen ni norikaemasu ka?',questionChinese:'换乘哪条线？',answer:'山手線です。',answerRomaji:'Yamanote-sen desu.',alternatives:['山手線です','山手線です。'],chinese:'山手线。',next:'間に合いますか？',hint:'说线路名称。'},
  {question:'間に合いますか？',questionRomaji:'Maniaimasu ka?',questionChinese:'来得及吗？',answer:'大丈夫です。',answerRomaji:'Daijōbu desu.',alternatives:['大丈夫です。','はい、大丈夫です。'],chinese:'没问题。',next:'ありがとうございました。',hint:'简单回答“大丈夫です”。'},
  {question:'ありがとうございました。',questionRomaji:'Arigatō gozaimashita.',questionChinese:'谢谢。',answer:'どういたしまして。',answerRomaji:'Dō itashimashite.',alternatives:['どういたしまして。','こちらこそ。'],chinese:'不客气。',next:'',hint:'礼貌回应感谢。'}
+];
+const shoppingLessons=[
+ ['shopping_clothes','👕 服装与试穿','价格、试衣间、尺码'],
+ ['shopping_price','💴 价格与优惠','价格、折扣、预算'],
+ ['shopping_stock','📦 库存与颜色','颜色、尺码、库存、调货'],
+ ['shopping_goods','🔎 商品与功能','用途、推荐、日本制造'],
+ ['shopping_taxfree','🧾 免税','免税柜台、护照、手续'],
+ ['shopping_payment','💳 付款','刷卡、电子支付、分开付款'],
+ ['shopping_bag','🛍️ 袋子与包装','袋子、礼物包装、盒子'],
+ ['shopping_return','↩️ 退换货','退货、换货、退款'],
+ ['shopping_convenience','🏪 便利店购物','加热、筷子、袋子、积分卡'],
+ ['shopping_gift','🎁 礼物与伴手礼','伴手礼、保质期、携带'],
+ ['shopping_departure','🛒 结账与离店','付款、感谢、离店'],
+ ['shopping_general','💬 购物沟通','看商品、拍照、考虑、不买']
+];
+function openShoppingHub(){
+ showView('shoppingHub');
+ document.getElementById('shoppingLessonList').innerHTML=shoppingLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
+}
+const shoppingDialogue=[
+ {question:'これはいくらですか？',questionRomaji:'Kore wa ikura desu ka?',questionChinese:'这个多少钱？',answer:'5,000円です。',answerRomaji:'Go-sen en desu.',alternatives:['5000円です。','5000円です','五千円です。'],chinese:'5000日元。',next:'試着してもいいですか？',hint:'回答价格即可。'},
+ {question:'試着してもいいですか？',questionRomaji:'Shichaku shite mo ii desu ka?',questionChinese:'可以试穿吗？',answer:'はい、どうぞ。',answerRomaji:'Hai, dōzo.',alternatives:['はい、どうぞ','どうぞ。'],chinese:'可以，请。',next:'Mサイズはありますか？',hint:'同意对方试穿。'},
+ {question:'Mサイズはありますか？',questionRomaji:'M-saizu wa arimasu ka?',questionChinese:'有 M 码吗？',answer:'はい、あります。',answerRomaji:'Hai, arimasu.',alternatives:['はい、あります。','あります。'],chinese:'有。',next:'免税できますか？',hint:'回答“有”。'},
+ {question:'免税できますか？',questionRomaji:'Menzei dekimasu ka?',questionChinese:'可以免税吗？',answer:'はい、できます。',answerRomaji:'Hai, dekimasu.',alternatives:['はい、できます。','できます。'],chinese:'可以。',next:'パスポートが必要ですか？',hint:'回答“可以”。'},
+ {question:'パスポートが必要ですか？',questionRomaji:'Pasupōto ga hitsuyō desu ka?',questionChinese:'需要护照吗？',answer:'はい、必要です。',answerRomaji:'Hai, hitsuyō desu.',alternatives:['はい、必要です。','必要です。'],chinese:'需要。',next:'カードでお願いします。',hint:'回答“需要”。'},
+ {question:'カードでお願いします。',questionRomaji:'Kādo de onegai shimasu.',questionChinese:'请刷卡。',answer:'はい、どうぞ。',answerRomaji:'Hai, dōzo.',alternatives:['はい、どうぞ。','どうぞ。'],chinese:'好的，请。',next:'レシートはご利用ですか？',hint:'店员递出刷卡设备时回应。'},
+ {question:'レシートはご利用ですか？',questionRomaji:'Reshīto wa go-riyō desu ka?',questionChinese:'需要小票吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请给我。',next:'ありがとうございました。',hint:'想要小票就说“お願いします”。'},
+ {question:'ありがとうございました。',questionRomaji:'Arigatō gozaimashita.',questionChinese:'谢谢您。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢您。',next:'',hint:'礼貌回应即可。'}
 ];
 const restaurantLessons=[
  ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
@@ -829,6 +968,12 @@ function openTransportDialogue(){
  document.querySelector('#practice .lesson-title').textContent='交通情景对话';
  resetDialogue();
 }
+function openShoppingDialogue(){
+ dialogueMode='shopping'; dialogueTurns=shoppingDialogue; dialogueTurn=0; dialogueResults=[];
+ showView('practice');
+ document.querySelector('#practice .lesson-title').textContent='购物情景对话';
+ resetDialogue();
+}
 function openHotelDialogue(){
  dialogueMode='hotel'; dialogueTurns=hotelDialogue; dialogueTurn=0; dialogueResults=[];
  showView('practice');
@@ -862,7 +1007,12 @@ function evaluateDialogue(heard,turn){
     [/以上|はい/,/以上|はい/],
     [/カード/,/お願い|で/]
   ];
-  if(dialogueMode==='transport'){
+  if(dialogueMode==='shopping'){
+ const sh=[[/5000|5000|五千/,/円|です/],[/はい|どうぞ/,/./],[/はい|あります/,/./],[/はい|できます/,/./],[/はい|必要|必要です/,/./],[/はい|どうぞ/,/./],[/はい|お願いします/,/./],[/ありがとうございました|ありがとうございます/,/./]];
+ const rule=sh[dialogueTurn];
+ return rule ? rule.every(re=>re.test(h)) : false;
+}
+if(dialogueMode==='transport'){
  const tr=[[/あちら|あっち/,/です/],[/3番線|三番線/,/です/],[/はい/,/行きます|/],[/3駅|三駅/,/です/],[/はい/,/あります/],[/山手線/,/です/],[/大丈夫/,/です/],[/どういたしまして|こちらこそ/,/./]];
  const rule=tr[dialogueTurn];
  return rule ? rule.every(re=>re.test(h)) : false;
