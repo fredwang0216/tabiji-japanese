@@ -150,8 +150,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
 <div id="dialogueFeedback" class="feedback"></div>
 <div id="dialogueReview" class="feedback"></div>
+<div id="dialogueHint" class="phrase-card" style="display:none"></div>
 <button class="mic" id="mic" onclick="startVoice()">🎙️</button><div class="status" id="status">点击麦克风，用日语回答</div>
-<div class="tip" style="text-align:center">支持 iPhone Safari 的语音识别；也可以直接输入。</div>
+<div style="display:flex;gap:8px;margin:10px 0">
+  <input id="answerInput" type="text" placeholder="也可以直接输入日语，例如：2人です" style="flex:1;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px">
+  <button onclick="submitTextAnswer()" style="padding:0 16px;border:0;border-radius:14px;background:#111;color:#fff;font-weight:700">提交</button>
+</div>
+<div class="tip" style="text-align:center">听不清时，直接看提示或输入答案也可以。</div>
 </section>
 
 <section id="phrasebook" class="view">
@@ -602,6 +607,11 @@ function evaluateDialogue(heard,turn){
   return rule ? rule.every(re=>re.test(h)) : false;
 }
 function showDialogueFeedback(ok,heard,turn){
+  const hint=document.getElementById('dialogueHint');
+  hint.style.display='block';
+  hint.innerHTML=ok
+    ? '<b>✓ 很好，继续下一轮。</b>'
+    : '<b>💡 提示：你可以直接说</b><div class="jp" style="margin-top:8px">'+turn.answer+'</div><div class="romaji">'+turn.answerRomaji+'</div><div class="cn">'+turn.chinese+'</div><button class="plan-btn" style="margin-top:10px" onclick="speakDialogueAnswer()">🔊 听正确答案</button>';
   const box=document.getElementById('dialogueFeedback');
   box.className='feedback show '+(ok?'dialogue-good':'dialogue-bad');
   box.innerHTML=
@@ -618,6 +628,13 @@ function showDialogueFeedback(ok,heard,turn){
     '<div class="dialogue-cn">'+turn.chinese+'</div>'+
     (ok?'':'<div class="feedback-why" style="margin-top:10px">'+turn.hint+'</div>');
 }
+function speakDialogueAnswer(){
+  const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(turn.answer);
+  u.lang='ja-JP';u.rate=.78;
+  speechSynthesis.speak(u);
+}
 function submitTextAnswer(){
   const input=document.getElementById('answerInput');
   const heard=input.value.trim();
@@ -629,6 +646,8 @@ function resetDialogue(){
   dialogueTurn=0; dialogueResults=[];
   document.getElementById('chat').innerHTML='<div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div>';
   document.getElementById('dialogueFeedback').className='feedback';
+  document.getElementById('dialogueHint').style.display='none';
+  document.getElementById('answerInput').value='';
   document.getElementById('dialogueReview').className='feedback';
   document.getElementById('dialogueProgress').style.width='14.28%';
   document.getElementById('dialogueStep').textContent='第 1 / 7 轮';
@@ -650,7 +669,7 @@ function processDialogueAnswer(heard){
   const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
   const ok=evaluateDialogue(heard,turn);
 recordLessonResult('restaurant_dialogue',dialogueTurn,ok,'speak');
-  dialogueResults.push({ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese});
+  dialogueResults[dialogueTurn]={ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese};
   document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
   document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
   showDialogueFeedback(ok,heard,turn);
