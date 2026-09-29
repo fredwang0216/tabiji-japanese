@@ -61,7 +61,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
 <div class="phrase-card"><b id="dailyHeadline">今天学 5 句，开口说出来。</b><div class="tip" id="dailySub">完成听、记、说、情景四步，就完成今天的学习。</div></div>
 <div id="dailySteps" class="lesson-grid"></div>
-<div id="dailyProgress" style="margin:14px 0"></div><div class="section-label">你最需要复习的 5 句</div><div id="weakReview" class="lesson-grid"></div>
+<div id="dailyProgress" style="margin:14px 0"></div><div class="section-label">📚 今天到期的复习</div><div id="weakReview" class="lesson-grid"></div><div id="srsExplain" class="tip" style="margin-top:12px">复习节奏：答错今天再见；答对后会逐渐延长到 1、2、4、7、14 天。说出来比选对更能提高熟练度。</div>
 </section>
 
 <section id="trip" class="view">
@@ -278,34 +278,72 @@ let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
-const MASTERY_KEY='tabiji_mastery_v1';
+const MASTERY_KEY='tabiji_srs_v1';
 let mastery=JSON.parse(localStorage.getItem(MASTERY_KEY)||'{}');
+const SRS_INTERVALS=[0,1,2,4,7,14];
 function saveMastery(){localStorage.setItem(MASTERY_KEY,JSON.stringify(mastery))}
 function phraseKey(s,i){return s+':'+i}
-function getMastery(s,i){return Math.max(0,Math.min(5,Number(mastery[phraseKey(s,i)]||0)))}
+function getRecord(s,i){
+  const r=mastery[phraseKey(s,i)]||{};
+  return {level:Number(r.level||0),due:r.due||localDateKey(),streak:Number(r.streak||0),last:r.last||''};
+}
+function getMastery(s,i){return getRecord(s,i).level}
 function changeMastery(s,i,delta){
- const k=phraseKey(s,i); mastery[k]=Math.max(0,Math.min(5,getMastery(s,i)+delta)); saveMastery();
+ const k=phraseKey(s,i), r=getRecord(s,i);
+ r.level=Math.max(0,Math.min(5,r.level+delta));
+ r.streak=delta>0?r.streak+1:0;
+ r.last=localDateKey();
+ r.due=localDateKey();
+ mastery[k]=r; saveMastery();
+}
+function addDays(key,n){
+ const d=new Date(key+'T12:00:00'); d.setDate(d.getDate()+n);
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function recordLessonResult(s,i,ok,mode){
+ const k=phraseKey(s,i), r=getRecord(s,i), today=localDateKey();
+ let nextLevel=r.level;
+ if(ok){
+   nextLevel=Math.min(5,r.level+(mode==='speak'?2:1));
+   r.streak+=1;
+ }else{
+   nextLevel=Math.max(0,r.level-1);
+   r.streak=0;
+ }
+ r.level=nextLevel; r.last=today;
+ r.due=ok?addDays(today,SRS_INTERVALS[nextLevel]):today;
+ mastery[k]=r; saveMastery();
 }
 function masteryStars(v){return '★'.repeat(v)+'☆'.repeat(5-v)}
 function masteryHTML(s,i){
  const v=getMastery(s,i);
  return '<div class="mastery"><div class="mastery-stars">'+masteryStars(v)+'</div><div class="mastery-bar"><div class="mastery-fill" style="width:'+(v*20)+'%"></div></div></div>';
 }
-function recordLessonResult(s,i,ok,mode){
- let delta=ok?1:-1;
- if(mode==='speak'&&ok) delta=2;
- changeMastery(s,i,delta);
-}
-function weakestPhrases(limit=5){
+function isDue(r){return !r.due||r.due<=localDateKey()}
+function duePhrases(limit=5){
  const rows=[];
  Object.keys(data).forEach(s=>{
-  (data[s].phrases||[]).forEach((p,i)=>rows.push({s,i,jp:p[0],romaji:p[1],cn:p[2],score:getMastery(s,i)}));
+  (data[s].phrases||[]).forEach((p,i)=>{
+   const r=getRecord(s,i);
+   rows.push({s,i,jp:p[0],romaji:p[1],cn:p[2],score:r.level,due:r.due,streak:r.streak});
+  });
  });
+ return rows.filter(x=>isDue(x)).sort((a,b)=>a.score-b.score||a.i-b.i).slice(0,limit);
+}
+function weakestPhrases(limit=5){
+ const due=duePhrases(limit);
+ if(due.length>=limit)return due;
+ const rows=[];
+ Object.keys(data).forEach(s=>(data[s].phrases||[]).forEach((p,i)=>{
+   const r=getRecord(s,i);
+   rows.push({s,i,jp:p[0],romaji:p[1],cn:p[2],score:r.level,due:r.due,streak:r.streak});
+ }));
  return rows.sort((a,b)=>a.score-b.score).slice(0,limit);
 }
 function renderMasterySummary(){
- const weak=weakestPhrases(5);
- return weak.map((p,i)=>'<button class="lesson-pick" onclick="openScene(\''+p.s+'\')"><span>'+p.score+'/5</span><b>'+(i+1)+'. '+p.jp+'</b><small>'+p.cn+' · '+p.romaji+'</small>'+masteryHTML(p.s,p.i)+'</button>').join('');
+ const weak=duePhrases(5);
+ if(!weak.length)return '<div class="phrase-card"><b>✨ 今天没有到期复习。</b><div class="tip">继续学习新内容，Tabiji 会在合适的时间提醒你回来复习。</div></div>';
+ return weak.map((p,i)=>'<button class="lesson-pick" onclick="openScene(\''+p.s+'\')"><span>'+p.score+'/5</span><b>'+(i+1)+'. '+p.jp+'</b><small>'+p.cn+' · '+p.romaji+(p.streak?' · 连续 '+p.streak+' 次':'')+'</small>'+masteryHTML(p.s,p.i)+'</button>').join('');
 }
 const dailyTasks=[
  {id:'listen',icon:'🔊',title:'听 5 句',desc:'先听今天的核心表达，熟悉声音和节奏。'},
@@ -387,6 +425,7 @@ document.getElementById('repeatBtn').textContent='🎙️ 说一遍';
 const c=document.getElementById('choices');c.innerHTML='';p[3].forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>answer(b,i===p[4]);c.appendChild(b)})}
 function answer(btn,ok){
   document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+  recordLessonResult(scene,idx,ok,'choice');
   btn.classList.add(ok?'correct':'wrong');
   const p=data[scene].phrases[idx];
   const correctBtn=document.querySelectorAll('.choice')[p[4]];
