@@ -13,7 +13,8 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Noto Sans SC",sans-serif}button{font:inherit;border:0;cursor:pointer} .app{max-width:520px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 18px calc(86px + env(safe-area-inset-bottom))}
 header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-items:center} .brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.brand span{color:var(--accent)}.streak{background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:20px;font-size:13px}
 .hero{background:#191919;color:white;border-radius:28px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"旅";position:absolute;right:-8px;bottom:-35px;font-size:150px;font-weight:900;color:#ffffff0d}.eyebrow{font-size:12px;color:#d7a49b;font-weight:700;letter-spacing:1px}.hero h1{font-size:32px;line-height:1.12;margin:8px 0}.hero p{color:#c9c9c9;margin:0 0 20px;line-height:1.5}.primary{background:var(--accent);color:#fff;padding:13px 18px;border-radius:14px;font-weight:700}
-.section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
+.section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lesson-grid{display:grid;gap:10px}.lesson-pick{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left}.lesson-pick b{display:block;font-size:16px}.lesson-pick small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.lesson-pick span{float:right;font-size:20px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
 .lesson{display:none}.lesson.active{display:block}.topbar{display:flex;align-items:center;gap:10px;margin:12px 0 18px}.back{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:14px}.lesson-title{font-size:23px;font-weight:800}.progress{height:5px;background:#e4ddd5;border-radius:9px;margin:8px 0 20px}.progress i{display:block;height:100%;width:25%;background:var(--accent);border-radius:9px}.phrase-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin-bottom:14px}.jp{font-size:31px;font-weight:700;line-height:1.35}.romaji{color:#8b867f;margin-top:8px}.cn{font-size:18px;margin-top:14px}.listen{margin-top:20px;background:#f3ece8;border-radius:15px;padding:12px 15px;color:#a83829;font-weight:700}.choices{display:grid;gap:10px;margin-top:14px}.choice{background:#fff;border:1px solid var(--line);padding:15px;border-radius:15px;text-align:left}.choice.correct{border-color:var(--green);background:#edf8f2}.choice.wrong{border-color:#d85a4a;background:#fff0ed}
 .feedback{display:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
 .feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}
@@ -45,15 +46,21 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <header><div class="brand">tabiji<span>·</span></div><div class="streak">🔥 3 天</div></header>
 
 <section id="home" class="view active">
-<div class="hero"><div class="eyebrow">日本旅行 · DAY 1</div><h1>今天开始，<br>开口说日语。</h1><p>专为旅行设计。学完就能在机场、餐厅、酒店和车站直接用。</p><button class="primary" onclick="openScene('restaurant')">继续学习 →</button></div>
+<div class="hero"><div class="eyebrow">日本旅行 · DAY 1</div><h1>今天开始，<br>开口说日语。</h1><p>专为旅行设计。学完就能在机场、餐厅、酒店和车站直接用。</p><button class="primary" onclick="openRestaurantHub()">继续学习 →</button></div>
 <div class="section-title">旅行场景</div>
 <div class="scenes">
-<button class="scene" onclick="openScene('restaurant')"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
+<button class="scene" onclick="openRestaurantHub()"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
 <button class="scene" onclick="openScene('hotel')"><div class="emoji">🏨</div><b>酒店</b><small>入住、行李、退房</small></button>
 <button class="scene" onclick="openScene('transport')"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
 <button class="scene" onclick="openScene('shopping')"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
+</section>
+
+<section id="restaurantHub" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">餐厅 · 场景训练</div></div>
+<div class="phrase-card"><b>🍜 选择你想练的场景</b><div class="tip">每个场景 8 句。先听、再说、最后做情景练习。</div></div>
+<div class="lesson-grid" id="restaurantLessonList"></div>
 </section>
 
 <section id="lesson" class="view lesson">
@@ -95,6 +102,97 @@ restaurant:{title:"餐厅 · 点餐",phrases:[
 ["これをください。","Kore o kudasai.","请给我这个。",["これをください。","これはいくらですか？","大丈夫です。"],0],
 ["お会計お願いします。","O-kaikei onegai shimasu.","请结账。",["お会計お願いします。","ごちそうさまでした。","予約しています。"],0],
 ["ごちそうさまでした。","Gochisōsama deshita.","谢谢款待。",["おはようございます。","ごちそうさまでした。","いってきます。"],1]]},
+
+restaurant_arrive:{title:"入店与座位",phrases:[
+["すみません。","Sumimasen.","不好意思 / 服务员！",["すみません。","ありがとうございます。","お願いします。"],0],
+["2人です。","Futari desu.","两位。",["2人です。","3人です。","1人です。"],0],
+["予約しています。","Yoyaku shiteimasu.","我有预订。",["予約しています。","おすすめは何ですか？","お会計お願いします。"],0],
+["予約していません。","Yoyaku shiteimasen.","我没有预订。",["予約していません。","予約しています。","大丈夫です。"],0],
+["何時までですか？","Nanji made desu ka?","营业到几点？",["何時までですか？","何名様ですか？","何ですか？"],0],
+["こちらで大丈夫です。","Kochira de daijōbu desu.","这里可以。",["こちらで大丈夫です。","これはいくらですか？","これをください。"],0],
+["窓側の席はありますか？","Madogawa no seki wa arimasu ka?","有靠窗的座位吗？",["窓側の席はありますか？","おすすめは何ですか？","カードでお願いします。"],0],
+["お願いします。","Onegai shimasu.","麻烦了 / 好的。",["お願いします。","いただきます。","ごちそうさまでした。"],0]]},
+restaurant_order:{title:"点餐",phrases:[
+["メニューをお願いします。","Menyū o onegai shimasu.","请给我菜单。",["メニューをお願いします。","お水をお願いします。","お会計お願いします。"],0],
+["これをください。","Kore o kudasai.","请给我这个。",["これをください。","これはいくらですか？","大丈夫です。"],0],
+["ラーメンを一つください。","Rāmen o hitotsu kudasai.","请给我一碗拉面。",["ラーメンを一つください。","ラーメンは辛いですか？","ラーメンはありますか？"],0],
+["これとこれをください。","Kore to kore o kudasai.","请给我这个和这个。",["これとこれをください。","これだけください。","これを見せてください。"],0],
+["おすすめは何ですか？","Osusume wa nan desu ka?","有什么推荐的吗？",["おすすめは何ですか？","何名様ですか？","どこですか？"],0],
+["人気の料理は何ですか？","Ninki no ryōri wa nan desu ka?","什么菜比较受欢迎？",["人気の料理は何ですか？","料理はどこですか？","何時ですか？"],0],
+["これを一つお願いします。","Kore o hitotsu onegai shimasu.","请给我一个这个。",["これを一つお願いします。","これを二つお願いします。","これをください。"],0],
+["以上です。","Ijō desu.","就这些。",["以上です。","大丈夫です。","お願いします。"],0]]},
+restaurant_menu:{title:"看菜单与确认",phrases:[
+["これは何ですか？","Kore wa nan desu ka?","这是什么？",["これは何ですか？","これはいくらですか？","どこですか？"],0],
+["これは何が入っていますか？","Kore wa nani ga haitte imasu ka?","这里面有什么？",["これは何が入っていますか？","何名様ですか？","何時ですか？"],0],
+["肉が入っていますか？","Niku ga haitte imasu ka?","里面有肉吗？",["肉が入っていますか？","魚が好きですか？","水がありますか？"],0],
+["魚が入っていますか？","Sakana ga haitte imasu ka?","里面有鱼吗？",["魚が入っていますか？","肉がありますか？","おすすめですか？"],0],
+["辛いですか？","Karai desu ka?","辣吗？",["辛いですか？","甘いですか？","高いですか？"],0],
+["甘いですか？","Amai desu ka?","甜吗？",["甘いですか？","辛いですか？","熱いですか？"],0],
+["温かいですか？","Atatakai desu ka?","是热的吗？",["温かいですか？","大丈夫ですか？","おすすめですか？"],0],
+["写真を見せてもらえますか？","Shashin o misete moraemasu ka?","可以给我看看照片吗？",["写真を見せてもらえますか？","メニューをください。","これをください。"],0]]},
+restaurant_preferences:{title:"忌口与饮食需求",phrases:[
+["辛いものは苦手です。","Karai mono wa nigate desu.","我不太能吃辣。",["辛いものは苦手です。","辛いものが好きです。","大丈夫です。"],0],
+["辛くしないでください。","Karakushinaide kudasai.","请不要做辣。",["辛くしないでください。","辛くしてください。","甘くしてください。"],0],
+["肉なしでお願いします。","Niku nashi de onegai shimasu.","请不要放肉。",["肉なしでお願いします。","肉をください。","魚なしでお願いします。"],0],
+["魚なしでお願いします。","Sakana nashi de onegai shimasu.","请不要放鱼。",["魚なしでお願いします。","魚をください。","肉なしでお願いします。"],0],
+["アレルギーがあります。","Arerugī ga arimasu.","我有过敏。",["アレルギーがあります。","アレルギーはありません。","大丈夫です。"],0],
+["ナッツが食べられません。","Nattsu ga taberaremasen.","我不能吃坚果。",["ナッツが食べられません。","ナッツが好きです。","肉が食べられません。"],0],
+["ベジタリアンです。","Bejitarian desu.","我是素食者。",["ベジタリアンです。","ビーガンです。","大丈夫です。"],0],
+["大丈夫です。","Daijōbu desu.","没问题。",["大丈夫です。","お願いします。","すみません。"],0]]},
+restaurant_drinks:{title:"饮料与加点",phrases:[
+["お水をお願いします。","O-mizu o onegai shimasu.","请给我水。",["お水をお願いします。","お茶をお願いします。","お会計お願いします。"],0],
+["お茶をお願いします。","O-cha o onegai shimasu.","请给我茶。",["お茶をお願いします。","お水をお願いします。","ビールをください。"],0],
+["ビールを一つください。","Bīru o hitotsu kudasai.","请给我一杯啤酒。",["ビールを一つください。","ビールを二つください。","水をください。"],0],
+["もう一つお願いします。","Mō hitotsu onegai shimasu.","再来一个。",["もう一つお願いします。","もう一度お願いします。","これ一つです。"],0],
+["おかわりできますか？","Okawari dekimasu ka?","可以续杯吗？",["おかわりできますか？","お会計できますか？","予約できますか？"],0],
+["氷なしでお願いします。","Kōri nashi de onegai shimasu.","请不要冰。",["氷なしでお願いします。","氷をください。","水なしでお願いします。"],0],
+["温かいお茶をください。","Atatakai o-cha o kudasai.","请给我热茶。",["温かいお茶をください。","冷たいお茶をください。","お水をください。"],0],
+["大丈夫です。","Daijōbu desu.","不用了 / 没问题。",["大丈夫です。","お願いします。","ください。"],0]]},
+restaurant_dining:{title:"用餐中",phrases:[
+["すみません。","Sumimasen.","不好意思 / 服务员。",["すみません。","ありがとうございます。","ごちそうさまでした。"],0],
+["お水をもう一つお願いします。","O-mizu o mō hitotsu onegai shimasu.","请再给我一杯水。",["お水をもう一つお願いします。","お水をください。","もう一つです。"],0],
+["取り皿をお願いします。","Torizara o onegai shimasu.","请给我一个分餐盘。",["取り皿をお願いします。","お箸をお願いします。","お水をお願いします。"],0],
+["お箸をお願いします。","O-hashi o onegai shimasu.","请给我筷子。",["お箸をお願いします。","取り皿をお願いします。","メニューをお願いします。"],0],
+["これはどうやって食べますか？","Kore wa dō yatte tabemasu ka?","这个怎么吃？",["これはどうやって食べますか？","これは何ですか？","どこで食べますか？"],0],
+["少し待ってください。","Sukoshi matte kudasai.","请稍等。",["少し待ってください。","もう一つください。","大丈夫です。"],0],
+["まだです。","Mada desu.","还没有。",["まだです。","もうです。","大丈夫です。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","すみません。","いただきます。"],0]]},
+restaurant_bill:{title:"结账",phrases:[
+["お会計お願いします。","O-kaikei onegai shimasu.","请结账。",["お会計お願いします。","予約しています。","これください。"],0],
+["別々にできますか？","Betsubetsu ni dekimasu ka?","可以分开结账吗？",["別々にできますか？","一緒にできますか？","予約できますか？"],0],
+["一緒でお願いします。","Issho de onegai shimasu.","一起结账。",["一緒でお願いします。","別々でお願いします。","カードでお願いします。"],0],
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","現金でお願いします。","電子マネーでお願いします。"],0],
+["現金でお願いします。","Genkin de onegai shimasu.","请付现金。",["現金でお願いします。","カードでお願いします。","無料でお願いします。"],0],
+["電子マネーは使えますか？","Denshi manē wa tsukaemasu ka?","可以用电子支付吗？",["電子マネーは使えますか？","カードはありますか？","現金ですか？"],0],
+["レシートをください。","Reshīto o kudasai.","请给我小票。",["レシートをください。","メニューをください。","領収書をください。"],0],
+["ごちそうさまでした。","Gochisōsama deshita.","谢谢款待。",["ごちそうさまでした。","ありがとうございます。","いただきます。"],0]]},
+restaurant_takeout:{title:"打包与外带",phrases:[
+["持ち帰りできますか？","Mochikaeri dekimasu ka?","可以外带吗？",["持ち帰りできますか？","予約できますか？","注文できますか？"],0],
+["これを持ち帰りたいです。","Kore o mochikaeritai desu.","我想把这个打包带走。",["これを持ち帰りたいです。","これを食べたいです。","これをください。"],0],
+["テイクアウトでお願いします。","Teikuauto de onegai shimasu.","请帮我做外带。",["テイクアウトでお願いします。","店内でお願いします。","カードでお願いします。"],0],
+["袋をください。","Fukuro o kudasai.","请给我袋子。",["袋をください。","箱をください。","水をください。"],0],
+["箸を二膳ください。","Hashi o nizen kudasai.","请给我两双筷子。",["箸を二膳ください。","箸を一膳ください。","皿を二枚ください。"],0],
+["どのくらいかかりますか？","Dono kurai kakarimasu ka?","大概要多久？",["どのくらいかかりますか？","いくらですか？","何時ですか？"],0],
+["ここで待ちます。","Koko de machimasu.","我在这里等。",["ここで待ちます。","ここで食べます。","ここにあります。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","ごちそうさまでした。","すみません。"],0]]},
+restaurant_problem:{title:"出问题时",phrases:[
+["注文したものが来ていません。","Chūmon shita mono ga kite imasen.","我点的东西还没来。",["注文したものが来ていません。","注文していません。","料理があります。"],0],
+["これを頼んでいません。","Kore o tanonde imasen.","我没有点这个。",["これを頼んでいません。","これをください。","これを食べます。"],0],
+["注文を間違えました。","Chūmon o machigaemashita.","我点错了。",["注文を間違えました。","注文しました。","注文してください。"],0],
+["料理が冷たいです。","Ryōri ga tsumetai desu.","菜是凉的。",["料理が冷たいです。","料理がおいしいです。","料理が辛いです。"],0],
+["すみません、確認してもらえますか？","Sumimasen, kakunin shite moraemasu ka?","不好意思，可以帮我确认一下吗？",["すみません、確認してもらえますか？","すみません、注文してください。","確認しました。"],0],
+["これは食べられません。","Kore wa taberaremasen.","这个我不能吃。",["これは食べられません。","これは食べられます。","これをください。"],0],
+["大丈夫です。","Daijōbu desu.","没关系 / 没问题。",["大丈夫です。","すみません。","お願いします。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","ごちそうさまでした。","いただきます。"],0]]},
+restaurant_departure:{title:"离店",phrases:[
+["ごちそうさまでした。","Gochisōsama deshita.","谢谢款待。",["ごちそうさまでした。","いただきます。","いらっしゃいませ。"],0],
+["とてもおいしかったです。","Totemo oishikatta desu.","非常好吃。",["とてもおいしかったです。","とても辛いです。","おいしくないです。"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢您。",["ありがとうございました。","お願いします。","いただきます。"],0],
+["また来ます。","Mata kimasu.","我还会再来。",["また来ます。","また食べます。","また行きます。"],0],
+["おいしかったです。","Oishikatta desu.","很好吃。",["おいしかったです。","おいしくないです。","おいしいですか？"],0],
+["ごちそうさまでした。","Gochisōsama deshita.","谢谢款待。",["ごちそうさまでした。","ありがとうございます。","すみません。"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢您。",["ありがとうございました。","おはようございます。","こんばんは。"],0],
+["またお願いします。","Mata onegai shimasu.","下次也麻烦您了。",["またお願いします。","もう一つお願いします。","大丈夫です。"],0]]},
 hotel:{title:"酒店 · 入住",phrases:[
 ["予約しています。","Yoyaku shiteimasu.","我有预订。",["予約しています。","チェックアウトします。","荷物を預けたいです。"],0],
 ["チェックインお願いします。","Chekku-in onegai shimasu.","我要办理入住。",["チェックインお願いします。","おすすめは何ですか？","これください。"],0],
@@ -113,6 +211,23 @@ let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+const restaurantLessons=[
+ ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
+ ['restaurant_order','🍜 点餐','点菜、推荐、数量'],
+ ['restaurant_menu','📖 看菜单','看懂菜单、确认食材、口味'],
+ ['restaurant_preferences','🥗 忌口与过敏','辣、肉类、过敏、素食'],
+ ['restaurant_drinks','🥤 饮料与加点','点饮料、续杯、加点'],
+ ['restaurant_dining','🍽️ 用餐中','加水、筷子、分餐盘、问吃法'],
+ ['restaurant_bill','💳 结账','分账、刷卡、现金、小票'],
+ ['restaurant_takeout','🥡 打包外带','外带、袋子、等待时间'],
+ ['restaurant_problem','🆘 出问题','漏单、点错、菜品问题'],
+ ['restaurant_departure','👋 离店','感谢、评价、再次光临']
+];
+function openRestaurantHub(){
+  showView('restaurantHub');
+  const el=document.getElementById('restaurantLessonList');
+  el.innerHTML=restaurantLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
+}
 function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
 function goHome(){showView('home',document.querySelector('.nav button'))}
 function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';
