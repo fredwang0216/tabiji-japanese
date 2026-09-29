@@ -781,7 +781,7 @@ function resetDialogue(){
   document.getElementById('dialogueHint').style.display='none';
   document.getElementById('answerInput').value='';
   document.getElementById('dialogueReview').className='feedback';
-  document.getElementById('dialogueProgress').style.width='14.28%';
+  document.getElementById('dialogueProgress').style.width=(100/dialogueTurns.length)+'%';
   document.getElementById('dialogueStep').textContent='第 1 / '+dialogueTurns.length+' 轮';
   document.getElementById('status').textContent='点击麦克风，用日语回答';
   document.getElementById('mic').disabled=false;
@@ -800,7 +800,7 @@ function showDialogueReview(){
 function processDialogueAnswer(heard){
   const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
   const ok=evaluateDialogue(heard,turn);
-recordLessonResult('restaurant_dialogue',dialogueTurn,ok,'speak');
+recordLessonResult(dialogueMode==='hotel'?'hotel_dialogue':'restaurant_dialogue',dialogueTurn,ok,'speak');
   dialogueResults[dialogueTurn]={ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese};
   document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
   document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
