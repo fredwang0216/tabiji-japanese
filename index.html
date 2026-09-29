@@ -62,14 +62,14 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 </section>
 
 <section id="daily" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
 <div class="phrase-card"><b id="dailyHeadline">今天学 5 句，开口说出来。</b><div class="tip" id="dailySub">完成听、记、说、情景四步，就完成今天的学习。</div></div>
 <div id="dailySteps" class="lesson-grid"></div>
 <div id="dailyProgress" style="margin:14px 0"></div><div class="section-label">📚 今天到期的复习</div><div id="weakReview" class="lesson-grid"></div><div id="srsExplain" class="tip" style="margin-top:12px">复习节奏：答错今天再见；答对后会逐渐延长到 1、2、4、7、14 天。说出来比选对更能提高熟练度。</div>
 </section>
 
 <section id="trip" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">日本旅行计划</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">日本旅行计划</div></div>
 <div class="phrase-card"><b>出发前，学最需要的。</b><div class="tip">Tabiji 会按照旅行时间，把餐厅、酒店、交通、购物等内容排成一个轻量学习计划。</div></div>
 <div class="section-label">你的旅行还有多久？</div>
 <div class="lesson-grid">
@@ -81,7 +81,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 </section>
 
 <section id="plans" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">Tabiji 会员</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">Tabiji 会员</div></div>
 <div class="phrase-card"><b>为旅行学日语，随时打开就能学。</b><div class="tip">核心旅行内容永久免费。Pro 解锁智能练习和个性化能力。无广告、无体力限制。</div></div>
 <div class="section-label">选择适合你的方式</div>
 <div class="plan-grid">
@@ -129,41 +129,41 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 </section>
 
 <section id="restaurantHub" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">餐厅 · 场景训练</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">餐厅 · 场景训练</div></div>
 <div class="phrase-card"><b>🍜 选择你想练的场景</b><div class="tip">每个场景 8 句。先听、再说、最后做情景练习。</div></div>
 <div class="lesson-grid" id="restaurantLessonList"></div>
 </section>
 
 <section id="hotelHub" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">酒店 · 场景训练</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">酒店 · 场景训练</div></div>
 <div class="phrase-card"><b>🏨 选择你想练的酒店场景</b><div class="tip">入住、行李、设施、房间问题、早餐、退房，一次覆盖。</div></div>
 <div class="lesson-grid" id="hotelLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 酒店情景对话</b><p>从前台办理入住，一路练到退房。</p><button class="plan-btn" onclick="openHotelDialogue()">开始酒店对话</button></div>
 </section>
 
 <section id="transportHub" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">交通 · 场景训练</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">交通 · 场景训练</div></div>
 <div class="phrase-card"><b>🚆 选择你想练的交通场景</b><div class="tip">车站、买票、换乘、新干线、出租车、问路，一次覆盖。</div></div>
 <div class="lesson-grid" id="transportLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 车站情景对话</b><p>从进站买票，到确认站台、换乘、到达目的地。</p><button class="plan-btn" onclick="openTransportDialogue()">开始交通对话</button></div>
 </section>
 
 <section id="shoppingHub" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">购物 · 场景训练</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">购物 · 场景训练</div></div>
 <div class="phrase-card"><b>🛍️ 选择你想练的购物场景</b><div class="tip">服装、价格、免税、付款、便利店、伴手礼、退换货，一次覆盖。</div></div>
 <div class="lesson-grid" id="shoppingLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 购物情景对话</b><p>从进店询价，到试穿、免税、付款。</p><button class="plan-btn" onclick="openShoppingDialogue()">开始购物对话</button></div>
 </section>
 
 <section id="extraHub" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">更多旅行场景</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">更多旅行场景</div></div>
 <div class="phrase-card"><b>✈️🏪💊 日本旅行高频场景</b><div class="tip">机场、便利店、药妆店，都是第一次去日本很容易用到的场景。</div></div>
 <div class="lesson-grid" id="extraLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 情景对话</b><p>每个场景都有一段完整对话。</p></div>
 </section>
 
 <section id="lesson" class="view lesson">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title" id="lessonTitle"></div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title" id="lessonTitle"></div></div>
 <div class="progress"><i id="progress"></i></div>
 <div class="phrase-card"><div class="jp" id="jp"></div><div class="romaji" id="romaji"></div><div class="cn" id="cn"></div><button class="listen" onclick="speak()">🔊 听日语</button></div>
 <div class="section-title">你会怎么说？</div><div class="choices" id="choices"></div>
@@ -177,7 +177,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 </section>
 
 <section id="practice" class="view">
-<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">情景对话</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">情景对话</div></div>
 <div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div><div class="progress-dialogue"><i id="dialogueProgress"></i></div><div class="tip" id="dialogueStep">第 1 / 7 轮</div></div>
 <div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
 <div id="dialogueFeedback" class="feedback"></div>
@@ -743,7 +743,24 @@ drugstore_general2:{title:"其他常用",phrases:[
 let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
-function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+let viewHistory=[];
+let currentView='home';
+function showView(id,btn,fromBack=false){
+  if(currentView!==id && !fromBack) viewHistory.push(currentView);
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentView=id;
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+function goBack(){
+  const prev=viewHistory.pop();
+  if(prev){
+    showView(prev,null,true);
+  }else{
+    showView('home',document.querySelector('.nav button'),true);
+  }
+}
 const MASTERY_KEY='tabiji_srs_v1';
 let mastery=JSON.parse(localStorage.getItem(MASTERY_KEY)||'{}');
 const SRS_INTERVALS=[0,1,2,4,7,14];
@@ -1008,7 +1025,7 @@ function openRestaurantHub(){
   el.innerHTML=restaurantLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
 }
 function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
-function goHome(){showView('home',document.querySelector('.nav button'))}
+function goHome(){viewHistory=[];showView('home',document.querySelector('.nav button'),true)}
 function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';
 document.getElementById('feedback').classList.remove('show');
 document.getElementById('feedbackTitle').textContent='';
