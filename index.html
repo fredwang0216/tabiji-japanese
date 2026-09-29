@@ -21,7 +21,9 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .dialogue-bad{border-color:#d85a4a;background:#fff0ed}
 .dialogue-jp{font-size:22px;font-weight:800;margin-top:8px}
 .dialogue-cn{color:var(--muted);margin-top:6px;line-height:1.5}
-.dialogue-why{color:#8b867f;font-size:14px;margin-top:4px;font-style:italic}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.dialogue-why{color:#8b867f;font-size:14px;margin-top:4px;font-style:italic}
+.chat-listen{display:block;margin-top:10px;background:#fff;border:1px solid var(--line);color:#a83829;border-radius:11px;padding:8px 11px;font-size:13px;font-weight:700}
+.chat-listen:active{transform:scale(.98)}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
@@ -62,7 +64,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <section id="practice" class="view">
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">情景对话</div></div>
 <div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div></div>
-<div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？</div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
+<div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
 <div id="dialogueFeedback" class="feedback"></div>
 <button class="mic" id="mic" onclick="startVoice()">🎙️</button><div class="status" id="status">点击麦克风，用日语回答</div>
 <div class="tip" style="text-align:center">支持 iPhone Safari 的语音识别；也可以直接输入。</div>
@@ -257,6 +259,14 @@ const dialogueTurns=[
 ];
 let dialogueTurn=0;
 
+function speakDialogueQuestion(turnIndex){
+  const turn=dialogueTurns[turnIndex]||dialogueTurns[0];
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(turn.question);
+  u.lang='ja-JP';u.rate=.78;
+  u.onend=()=>{lastSpeechEnd=Date.now()};
+  speechSynthesis.speak(u);
+}
 function normalizeJapanese(s){
   return s.replace(/[。！？!?、\s]/g,'').replace(/[0-9]/g,m=>String.fromCharCode(m.charCodeAt(0)+0));
 }
@@ -320,7 +330,7 @@ function startVoice(){
         setTimeout(()=>{
           const isLast=dialogueTurn>=dialogueTurns.length-1;
           const nextText=isLast?'ありがとうございます！':turn.next;
-          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+nextText+'</div>');
+          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+nextText+(isLast?'':'<button class="chat-listen" onclick="speakDialogueQuestion('+dialogueTurn+')">🔊 再听一次</button>')+'</div>');
           const u=new SpeechSynthesisUtterance('いいですね！'+nextText);
           u.lang='ja-JP';u.rate=.84;u.onend=()=>{lastSpeechEnd=Date.now()};
           speechSynthesis.cancel();speechSynthesis.speak(u);
