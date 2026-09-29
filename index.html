@@ -892,18 +892,12 @@ function renderDaily(focus){
 }
 function startDailyStep(id){
  const focus=prepareDaily();
- if(id==='learn'){dailyState.done.learn=true;saveDaily();renderDaily(focus);startDailyLesson(focus.scene);return}
- if(id==='speak'){dailyState.done.speak=true;saveDaily();renderDaily(focus);startDailyLesson(focus.scene);return}
- if(id==='roleplay'){
-   dailyState.done.roleplay=true;saveDaily();renderDaily(focus);
-   if(focus.cat&&focus.cat.id==='restaurant'){showView('practice');}
-   else {startDailyLesson(focus.scene);}
- }
+ if(id==='learn'){dailyActiveStep='learn';startDailyLesson(focus.scene);return}
+ if(id==='speak'){dailyActiveStep='speak';startDailyLesson(focus.scene);return}
+ if(id==='roleplay'){dailyActiveStep='roleplay';if(focus.cat&&focus.cat.id==='restaurant'){showView('practice');}else{startDailyLesson(focus.scene);}}
 }
-function startDailyLesson(sceneId){
- dailyMode=true; dailySceneLimit=getDailyLimit(); scene=sceneId; idx=0; renderPhrase(); showView('lesson');
-}
-let dailyMode=false, dailySceneLimit=5;
+function startDailyLesson(sceneId){dailyMode=true;dailySceneLimit=getDailyLimit();scene=sceneId;idx=0;renderPhrase();showView('lesson');}
+let dailyMode=false, dailySceneLimit=5, dailyActiveStep='learn';
 const tripCurriculum=[
  ['D1','🗣️ 生存日语','问候、谢谢、请问、听不懂时怎么说'],
  ['D2','🍜 餐厅','入店、点餐、推荐、结账'],
@@ -1153,7 +1147,7 @@ function repeatPhrase(){
     try{r.start()}catch(e){activeRecognition=null;btn.disabled=false;btn.textContent='🎙️ 再说一遍';status.textContent='启动失败，再试一次。'}
   },700);
 }
-function nextPhrase(){const totalForLesson=dailyMode?Math.min(dailySceneLimit,data[scene].phrases.length):data[scene].phrases.length;if(idx<totalForLesson-1){idx++;renderPhrase()}else{dailyMode=false;showView('daily');renderDaily(prepareDaily());}}
+function nextPhrase(){const totalForLesson=dailyMode?Math.min(dailySceneLimit,data[scene].phrases.length):data[scene].phrases.length;if(idx<totalForLesson-1){idx++;renderPhrase()}else{if(dailyMode&&dailyActiveStep){dailyState.done[dailyActiveStep]=true;saveDaily()}dailyMode=false;showView('daily');renderDaily(prepareDaily());}}
 function speak(){
   const u=new SpeechSynthesisUtterance(data[scene].phrases[idx][0]);
   u.lang='ja-JP';u.rate=.82;
