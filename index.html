@@ -54,7 +54,11 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <button class="scene" onclick="openTransportHub()"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
 <button class="scene" onclick="openShoppingHub()"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
-<div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
+<div class="section-title">更多旅行场景</div><div class="scenes">
+<button class="scene" onclick="openExtraHub()"><div class="emoji">✈️</div><b>机场</b><small>入境、行李、登机</small></button>
+<button class="scene" onclick="openExtraHub()"><div class="emoji">🏪</div><b>便利店</b><small>加热、付款、买东西</small></button>
+<button class="scene" onclick="openExtraHub()"><div class="emoji">💊</div><b>药妆店</b><small>找药、说明、结账</small></button>
+</div><div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
 </section>
 
 <section id="daily" class="view">
@@ -149,6 +153,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="phrase-card"><b>🛍️ 选择你想练的购物场景</b><div class="tip">服装、价格、免税、付款、便利店、伴手礼、退换货，一次覆盖。</div></div>
 <div class="lesson-grid" id="shoppingLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 购物情景对话</b><p>从进店询价，到试穿、免税、付款。</p><button class="plan-btn" onclick="openShoppingDialogue()">开始购物对话</button></div>
+</section>
+
+<section id="extraHub" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">更多旅行场景</div></div>
+<div class="phrase-card"><b>✈️🏪💊 日本旅行高频场景</b><div class="tip">机场、便利店、药妆店，都是第一次去日本很容易用到的场景。</div></div>
+<div class="lesson-grid" id="extraLessonList"></div>
+<div class="plan-card" style="margin-top:12px"><b>🎭 情景对话</b><p>每个场景都有一段完整对话。</p></div>
 </section>
 
 <section id="lesson" class="view lesson">
@@ -583,6 +594,151 @@ shopping_general:{title:"购物沟通",phrases:[
 ["中古ですか？","Chūko desu ka?","是二手的吗？",["中古ですか？","中古はいくらですか？","中古はどこですか？"],0],
 ["少し考えます。","Sukoshi kangaemasu.","我考虑一下。",["少し考えます。","少し買います。","少し食べます。"],0],
 ["今回はやめておきます。","Konkai wa yamete okimasu.","这次先不买了。",["今回はやめておきます。","今回は買っておきます。","今回は食べておきます。"],0]]}
+airport_arrival:{title:"入境与海关",phrases:[
+["入国審査はどこですか？","Nyūkoku shinsa wa doko desu ka?","入境审查在哪里？",["入国審査はどこですか？","荷物はどこですか？","出口はどこですか？"],0],
+["観光です。","Kankō desu.","我是来旅游的。",["観光です。","仕事です。","ホテルです。"],0],
+["5日間滞在します。","Itsuka-kan taizai shimasu.","我停留5天。",["5日間滞在します。","5人滞在します。","5時に滞在します。"],0],
+["東京に行きます。","Tōkyō ni ikimasu.","我要去东京。",["東京に行きます。","東京を食べます。","東京を買います。"],0],
+["このホテルに泊まります。","Kono hoteru ni tomarimasu.","我住这家酒店。",["このホテルに泊まります。","このホテルを買います。","このホテルを食べます。"],0],
+["帰りの航空券があります。","Kaeri no kōkūken ga arimasu.","我有返程机票。",["帰りの航空券があります。","帰りの切符を食べます。","帰りのホテルがあります。"],0],
+["はい、わかりました。","Hai, wakarimashita.","好的，我明白了。",["はい、わかりました。","はい、食べました。","はい、買いました。"],0],
+["ありがとうございます。","Arigatō gozaimasu.","谢谢。",["ありがとうございます。","おやすみなさい。","いただきます。"],0]]},
+airport_baggage:{title:"行李提取",phrases:[
+["荷物はどこですか？","Nimotsu wa doko desu ka?","行李在哪里？",["荷物はどこですか？","荷物はいくらですか？","荷物は何時ですか？"],0],
+["手荷物受取所はどこですか？","Tebagage uketorijo wa doko desu ka?","行李提取处在哪里？",["手荷物受取所はどこですか？","出発ロビーはどこですか？","免税店はどこですか？"],0],
+["荷物が出てきません。","Nimotsu ga dete kimasen.","我的行李没有出来。",["荷物が出てきません。","荷物があります。","荷物を買います。"],0],
+["スーツケースが見つかりません。","Sūtsukēsu ga mitsukarimasen.","找不到我的行李箱。",["スーツケースが見つかりません。","スーツケースがあります。","スーツケースを買います。"],0],
+["荷物が壊れています。","Nimotsu ga kowarete imasu.","行李坏了。",["荷物が壊れています。","荷物があります。","荷物を預けます。"],0],
+["この荷物は私のものです。","Kono nimotsu wa watashi no mono desu.","这件行李是我的。",["この荷物は私のものです。","この荷物はホテルです。","この荷物は無料です。"],0],
+["どこで問い合わせればいいですか？","Doko de toiawasereba ii desu ka?","我应该去哪里咨询？",["どこで問い合わせればいいですか？","どこで食べればいいですか？","どこで寝ればいいですか？"],0],
+["手伝ってもらえますか？","Tetsudatte moraemasu ka?","可以帮帮我吗？",["手伝ってもらえますか？","食べてもらえますか？","買ってもらえますか？"],0]]},
+airport_departure:{title:"机场出发",phrases:[
+["チェックインカウンターはどこですか？","Chekku-in kauntā wa doko desu ka?","值机柜台在哪里？",["チェックインカウンターはどこですか？","免税カウンターはどこですか？","出口はどこですか？"],0],
+["搭乗口はどこですか？","Tōjōguchi wa doko desu ka?","登机口在哪里？",["搭乗口はどこですか？","改札はどこですか？","入口はいくらですか？"],0],
+["何番ゲートですか？","Nan-ban gēto desu ka?","几号登机口？",["何番ゲートですか？","何番線ですか？","何番出口ですか？"],0],
+["この便は東京行きですか？","Kono bin wa Tōkyō-yuki desu ka?","这班航班去东京吗？",["この便は東京行きですか？","この便は東京ですか？","この便は何人ですか？"],0],
+["荷物を預けたいです。","Nimotsu o azuketai desu.","我想托运行李。",["荷物を預けたいです。","荷物を取りたいです。","荷物を買いたいです。"],0],
+["窓側の席をお願いします。","Madogawa no seki o onegai shimasu.","请给我靠窗座位。",["窓側の席をお願いします。","通路側の席をお願いします。","窓をお願いします。"],0],
+["通路側の席をお願いします。","Tsūrogawa no seki o onegai shimasu.","请给我靠过道座位。",["通路側の席をお願いします。","窓側の席をお願いします。","通路をお願いします。"],0],
+["パスポートをお願いします。","Pasupōto o onegai shimasu.","请出示护照。",["パスポートをお願いします。","チケットをお願いします。","ホテルをお願いします。"],0]]},
+airport_security:{title:"安检与登机",phrases:[
+["保安検査場はどこですか？","Hoan kensa-jō wa doko desu ka?","安检处在哪里？",["保安検査場はどこですか？","手荷物受取所はどこですか？","免税店はどこですか？"],0],
+["液体は持ち込めますか？","Ekitai wa mochikomemasu ka?","液体可以带上飞机吗？",["液体は持ち込めますか？","液体は買えますか？","液体は飲めますか？"],0],
+["パソコンを出しますか？","Pasokon o dashimasu ka?","需要把电脑拿出来吗？",["パソコンを出しますか？","パソコンを買いますか？","パソコンを預けますか？"],0],
+["靴を脱ぎますか？","Kutsu o nugimasu ka?","需要脱鞋吗？",["靴を脱ぎますか？","靴を買いますか？","靴を預けますか？"],0],
+["搭乗口は何番ですか？","Tōjōguchi wa nan-ban desu ka?","登机口是几号？",["搭乗口は何番ですか？","搭乗口は何時ですか？","搭乗口はいくらですか？"],0],
+["搭乗は何時からですか？","Tōjō wa nanji kara desu ka?","几点开始登机？",["搭乗は何時からですか？","搭乗は何人からですか？","搭乗はどこからですか？"],0],
+["この便は遅れていますか？","Kono bin wa okurete imasu ka?","这班航班晚点了吗？",["この便は遅れていますか？","この便は無料ですか？","この便はホテルですか？"],0],
+["どのくらい遅れていますか？","Dono kurai okurete imasu ka?","晚点多久？",["どのくらい遅れていますか？","どのくらい食べていますか？","どのくらい買っていますか？"],0]]},
+airport_transport:{title:"机场交通",phrases:[
+["電車の駅はどこですか？","Densha no eki wa doko desu ka?","电车站在哪里？",["電車の駅はどこですか？","電車の駅はいくらですか？","電車の駅は何時ですか？"],0],
+["バス乗り場はどこですか？","Basu noriba wa doko desu ka?","巴士乘车点在哪里？",["バス乗り場はどこですか？","バス料金はどこですか？","バスは何人ですか？"],0],
+["東京駅まで行きたいです。","Tōkyō-eki made ikitai desu.","我想去东京站。",["東京駅まで行きたいです。","東京駅まで食べたいです。","東京駅まで買いたいです。"],0],
+["空港バスはどこから出ますか？","Kūkō basu wa doko kara demasu ka?","机场巴士从哪里发车？",["空港バスはどこから出ますか？","空港バスはいくらですか？","空港バスは何人ですか？"],0],
+["タクシー乗り場はどこですか？","Takushī noriba wa doko desu ka?","出租车乘车点在哪里？",["タクシー乗り場はどこですか？","タクシー料金はどこですか？","タクシーは何人ですか？"],0],
+["この電車は市内に行きますか？","Kono densha wa shinai ni ikimasu ka?","这班电车去市区吗？",["この電車は市内に行きますか？","この電車は市内ですか？","この電車は何人ですか？"],0],
+["切符はどこで買えますか？","Kippu wa doko de kaemasu ka?","车票在哪里买？",["切符はどこで買えますか？","切符はどこで食べられますか？","切符はどこで寝られますか？"],0],
+["ICカードは使えますか？","Ai-shī kādo wa tsukaemasu ka?","可以使用交通IC卡吗？",["ICカードは使えますか？","ICカードはありますか？","ICカードはいくらですか？"],0]]},
+airport_general:{title:"机场沟通",phrases:[
+["日本語があまり話せません。","Nihongo ga amari hanasemasen.","我不太会说日语。",["日本語があまり話せません。","日本語が上手です。","英語が話せません。"],0],
+["ゆっくり話してください。","Yukkuri hanashite kudasai.","请说慢一点。",["ゆっくり話してください。","静かにしてください。","もう帰ります。"],0],
+["もう一度お願いします。","Mō ichido onegai shimasu.","请再说一次。",["もう一度お願いします。","もう帰ります。","もう食べません。"],0],
+["英語を話せますか？","Eigo o hanasemasu ka?","您会说英语吗？",["英語を話せますか？","英語を食べますか？","英語を買いますか？"],0],
+["ここで待ってもいいですか？","Koko de matte mo ii desu ka?","可以在这里等吗？",["ここで待ってもいいですか？","ここで食べてもいいですか？","ここで買ってもいいですか？"],0],
+["トイレはどこですか？","Toire wa doko desu ka?","洗手间在哪里？",["トイレはどこですか？","トイレはいくらですか？","トイレは何時ですか？"],0],
+["助けてください。","Tasukete kudasai.","请帮帮我。",["助けてください。","待ってください。","食べてください。"],0],
+["大丈夫です。","Daijōbu desu.","没问题。",["大丈夫です。","お願いします。","すみません。"],0]]},
+convenience_food:{title:"便利店食品",phrases:[
+["おにぎりはどこですか？","Onigiri wa doko desu ka?","饭团在哪里？",["おにぎりはどこですか？","おにぎりはいくらですか？","おにぎりは何時ですか？"],0],
+["お弁当はどこですか？","Obentō wa doko desu ka?","便当在哪里？",["お弁当はどこですか？","お弁当はいくらですか？","お弁当は何人ですか？"],0],
+["これを温めてもらえますか？","Kore o atatamete moraemasu ka?","可以帮我加热这个吗？",["これを温めてもらえますか？","これを冷やしてもらえますか？","これを返してもらえますか？"],0],
+["お箸をください。","O-hashi o kudasai.","请给我筷子。",["お箸をください。","お箸を返します。","お箸を買います。"],0],
+["スプーンをください。","Supūn o kudasai.","请给我勺子。",["スプーンをください。","スプーンを返します。","スプーンを見せます。"],0],
+["フォークをください。","Fōku o kudasai.","请给我叉子。",["フォークをください。","フォークを返します。","フォークを見せます。"],0],
+["飲み物はどこですか？","Nomimono wa doko desu ka?","饮料在哪里？",["飲み物はどこですか？","飲み物はいくらですか？","飲み物は何時ですか？"],0],
+["冷たい飲み物はありますか？","Tsumetai nomimono wa arimasu ka?","有冰饮吗？",["冷たい飲み物はありますか？","冷たい飲み物はいくらですか？","冷たい飲み物はどこですか？"],0]]},
+convenience_payment:{title:"便利店结账",phrases:[
+["袋をください。","Fukuro o kudasai.","请给我袋子。",["袋をください。","袋を返します。","袋を見せます。"],0],
+["袋はいりません。","Fukuro wa irimasen.","不要袋子。",["袋はいりません。","袋はあります。","袋をください。"],0],
+["温めてください。","Atatamete kudasai.","请加热。",["温めてください。","冷やしてください。","包んでください。"],0],
+["レシートをください。","Reshīto o kudasai.","请给我小票。",["レシートをください。","レシートを返します。","レシートを買います。"],0],
+["ポイントカードはありますか？","Pointo kādo wa arimasu ka?","有积分卡吗？",["ポイントカードはありますか？","ポイントカードはいくらですか？","ポイントカードは何時ですか？"],0],
+["現金でお願いします。","Genkin de onegai shimasu.","请付现金。",["現金でお願いします。","カードでお願いします。","無料でお願いします。"],0],
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","現金でお願いします。","レシートをお願いします。"],0],
+["温めなくて大丈夫です。","Atatamenakute daijōbu desu.","不用加热。",["温めなくて大丈夫です。","温めてください。","温めてもいいです。"],0]]},
+convenience_services:{title:"便利店服务",phrases:[
+["ATMはどこですか？","ATM wa doko desu ka?","ATM在哪里？",["ATMはどこですか？","ATMはいくらですか？","ATMは何時ですか？"],0],
+["ATMは使えますか？","ATM wa tsukaemasu ka?","可以使用ATM吗？",["ATMは使えますか？","ATMはありますか？","ATMはいくらですか？"],0],
+["コピーできますか？","Kopī dekimasu ka?","可以复印吗？",["コピーできますか？","コピーはどこですか？","コピーはいくらですか？"],0],
+["宅配便を送りたいです。","Takuhaibin o okuritai desu.","我想寄快递。",["宅配便を送りたいです。","宅配便を買いたいです。","宅配便を食べたいです。"],0],
+["荷物を受け取れますか？","Nimotsu o uketoremasu ka?","可以收包裹吗？",["荷物を受け取れますか？","荷物を食べられますか？","荷物を買えますか？"],0],
+["公共料金を払えますか？","Kōkyō ryōkin o haraemasu ka?","可以缴公共费用吗？",["公共料金を払えますか？","公共料金を買えますか？","公共料金を食べますか？"],0],
+["トイレはありますか？","Toire wa arimasu ka?","有洗手间吗？",["トイレはありますか？","トイレはいくらですか？","トイレは何時ですか？"],0],
+["営業時間は何時までですか？","Eigyō jikan wa nanji made desu ka?","营业到几点？",["営業時間は何時までですか？","営業時間はどこですか？","営業時間はいくらですか？"],0]]},
+convenience_general:{title:"便利店沟通",phrases:[
+["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","これはどこですか？","これは何時ですか？"],0],
+["これは何ですか？","Kore wa nan desu ka?","这是什么？",["これは何ですか？","これはいくらですか？","これはどこですか？"],0],
+["おすすめはどれですか？","Osusume wa dore desu ka?","推荐哪个？",["おすすめはどれですか？","おすすめはどこですか？","おすすめはいくらですか？"],0],
+["人気なのはどれですか？","Ninki na no wa dore desu ka?","哪个比较受欢迎？",["人気なのはどれですか？","人気なのはどこですか？","人気なのはいくらですか？"],0],
+["これは冷蔵ですか？","Kore wa reizō desu ka?","这个需要冷藏吗？",["これは冷蔵ですか？","これは冷凍ですか？","これは無料ですか？"],0],
+["これは冷凍ですか？","Kore wa reitō desu ka?","这个是冷冻的吗？",["これは冷凍ですか？","これは冷蔵ですか？","これは無料ですか？"],0],
+["賞味期限はいつですか？","Shōmi kigen wa itsu desu ka?","保质期到什么时候？",["賞味期限はいつですか？","賞味期限はいくらですか？","賞味期限はどこですか？"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢。",["ありがとうございました。","いらっしゃいませ。","いただきます。"],0]]},
+drugstore_medicine:{title:"找药与症状",phrases:[
+["風邪薬はありますか？","Kaze-gusuri wa arimasu ka?","有感冒药吗？",["風邪薬はありますか？","風邪薬はいくらですか？","風邪薬は何時ですか？"],0],
+["頭痛薬はありますか？","Zutsū-yaku wa arimasu ka?","有头痛药吗？",["頭痛薬はありますか？","頭痛薬はどこですか？","頭痛薬は何人ですか？"],0],
+["胃薬はありますか？","I-gusuri wa arimasu ka?","有胃药吗？",["胃薬はありますか？","胃薬はいくらですか？","胃薬は何時ですか？"],0],
+["喉の薬はありますか？","Nodo no kusuri wa arimasu ka?","有喉咙药吗？",["喉の薬はありますか？","喉の薬はいくらですか？","喉の薬は何時ですか？"],0],
+["この症状に効きますか？","Kono shōjō ni kikimasu ka?","对这个症状有效吗？",["この症状に効きますか？","この症状はいくらですか？","この症状はどこですか？"],0],
+["眠くなりますか？","Nemuku narimasu ka?","会让人犯困吗？",["眠くなりますか？","眠くなりませんか？","眠くはいくらですか？"],0],
+["食前ですか、食後ですか？","Shokuzen desu ka, shokugo desu ka?","饭前还是饭后？",["食前ですか、食後ですか？","食前はいくらですか？","食後はどこですか？"],0],
+["一日何回ですか？","Ichinichi nankai desu ka?","一天几次？",["一日何回ですか？","一日何人ですか？","一日何時ですか？"],0]]},
+drugstore_skincare:{title:"护肤与日用品",phrases:[
+["日焼け止めはどこですか？","Hiyakedome wa doko desu ka?","防晒霜在哪里？",["日焼け止めはどこですか？","日焼け止めはいくらですか？","日焼け止めは何時ですか？"],0],
+["化粧水はどこですか？","Keshōsui wa doko desu ka?","化妆水在哪里？",["化粧水はどこですか？","化粧水はいくらですか？","化粧水は何時ですか？"],0],
+["洗顔料はありますか？","Senganryō wa arimasu ka?","有洗面奶吗？",["洗顔料はありますか？","洗顔料はいくらですか？","洗顔料は何時ですか？"],0],
+["シャンプーはありますか？","Shanpū wa arimasu ka?","有洗发水吗？",["シャンプーはありますか？","シャンプーはいくらですか？","シャンプーは何時ですか？"],0],
+["旅行用のサイズはありますか？","Ryokō-yō no saizu wa arimasu ka?","有旅行装吗？",["旅行用のサイズはありますか？","旅行用の色はありますか？","旅行用のホテルはありますか？"],0],
+["敏感肌用ですか？","Binkan hada-yō desu ka?","是敏感肌适用的吗？",["敏感肌用ですか？","敏感肌はいくらですか？","敏感肌はどこですか？"],0],
+["香りはありますか？","Kaori wa arimasu ka?","有香味吗？",["香りはありますか？","香りはいくらですか？","香りは何時ですか？"],0],
+["テスターはありますか？","Tesutā wa arimasu ka?","有试用装吗？",["テスターはありますか？","テスターはいくらですか？","テスターは何時ですか？"],0]]},
+drugstore_price:{title:"价格与库存",phrases:[
+["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","これはどこですか？","これは何時ですか？"],0],
+["セールですか？","Sēru desu ka?","打折吗？",["セールですか？","無料ですか？","予約ですか？"],0],
+["割引はありますか？","Waribiki wa arimasu ka?","有折扣吗？",["割引はありますか？","在庫はありますか？","袋はありますか？"],0],
+["在庫はありますか？","Zaiko wa arimasu ka?","有库存吗？",["在庫はありますか？","在庫はいくらですか？","在庫は何時ですか？"],0],
+["別のサイズはありますか？","Betsu no saizu wa arimasu ka?","有其他规格吗？",["別のサイズはありますか？","別の色はいくらですか？","別の店はどこですか？"],0],
+["別の商品はありますか？","Betsu no shōhin wa arimasu ka?","有其他商品吗？",["別の商品はありますか？","別の商品はいくらですか？","別の商品は何時ですか？"],0],
+["免税できますか？","Menzei dekimasu ka?","可以免税吗？",["免税できますか？","免税はいくらですか？","免税は何時ですか？"],0],
+["免税カウンターはどこですか？","Menzei kauntā wa doko desu ka?","免税柜台在哪里？",["免税カウンターはどこですか？","レジはどこですか？","入口はどこですか？"],0]]},
+drugstore_payment:{title:"付款与包装",phrases:[
+["カードでお願いします。","Kādo de onegai shimasu.","请刷卡。",["カードでお願いします。","現金でお願いします。","レシートをお願いします。"],0],
+["現金でお願いします。","Genkin de onegai shimasu.","请付现金。",["現金でお願いします。","カードでお願いします。","無料でお願いします。"],0],
+["レシートをください。","Reshīto o kudasai.","请给我小票。",["レシートをください。","レシートを返します。","レシートを買います。"],0],
+["袋をください。","Fukuro o kudasai.","请给我袋子。",["袋をください。","袋を返します。","袋を見せます。"],0],
+["別々に包んでください。","Betsubetsu ni tsutsunde kudasai.","请分开包装。",["別々に包んでください。","別々に払ってください。","別々に見てください。"],0],
+["まとめてください。","Matomete kudasai.","请一起装。",["まとめてください。","まとめて食べてください。","まとめて返してください。"],0],
+["パスポートが必要ですか？","Pasupōto ga hitsuyō desu ka?","需要护照吗？",["パスポートが必要ですか？","パスポートはいくらですか？","パスポートはどこですか？"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢。",["ありがとうございました。","いらっしゃいませ。","いただきます。"],0]]},
+drugstore_general:{title:"药妆店沟通",phrases:[
+["これは何ですか？","Kore wa nan desu ka?","这是什么？",["これは何ですか？","これはいくらですか？","これはどこですか？"],0],
+["おすすめはどれですか？","Osusume wa dore desu ka?","推荐哪个？",["おすすめはどれですか？","おすすめはどこですか？","おすすめはいくらですか？"],0],
+["日本で人気の商品ですか？","Nihon de ninki no shōhin desu ka?","这是日本受欢迎的商品吗？",["日本で人気の商品ですか？","日本で人気のホテルですか？","日本で人気の駅ですか？"],0],
+["使い方を教えてください。","Tsukaikata o oshiete kudasai.","请告诉我怎么用。",["使い方を教えてください。","買い方を教えてください。","行き方を教えてください。"],0],
+["説明を見せてもらえますか？","Setsumei o misete moraemasu ka?","可以给我看看说明吗？",["説明を見せてもらえますか？","写真を見せてもらえますか？","部屋を見せてもらえますか？"],0],
+["日本語が読めません。","Nihongo ga yomemasen.","我看不懂日语。",["日本語が読めません。","日本語が話せません。","日本語が上手です。"],0],
+["英語の説明はありますか？","Eigo no setsumei wa arimasu ka?","有英文说明吗？",["英語の説明はありますか？","英語のホテルはありますか？","英語の駅はありますか？"],0],
+["もう一度お願いします。","Mō ichido onegai shimasu.","请再说一次。",["もう一度お願いします。","もう帰ります。","もう食べません。"],0]]},
+drugstore_general2:{title:"其他常用",phrases:[
+["テスターを使ってもいいですか？","Tesutā o tsukatte mo ii desu ka?","可以试用吗？",["テスターを使ってもいいですか？","テスターを買ってもいいですか？","テスターを返してもいいですか？"],0],
+["これは敏感肌でも使えますか？","Kore wa binkan hada demo tsukaemasu ka?","敏感肌也可以用吗？",["これは敏感肌でも使えますか？","これは敏感肌でも買えますか？","これは敏感肌でも食べますか？"],0],
+["アルコールは入っていますか？","Arukōru wa haitte imasu ka?","含酒精吗？",["アルコールは入っていますか？","アルコールはいくらですか？","アルコールは何時ですか？"],0],
+["香料は入っていますか？","Kōryō wa haitte imasu ka?","含香料吗？",["香料は入っていますか？","香料はいくらですか？","香料は何時ですか？"],0],
+["無香料ですか？","Mukōryō desu ka?","是无香的吗？",["無香料ですか？","無料ですか？","無色ですか？"],0],
+["一番人気はどれですか？","Ichiban ninki wa dore desu ka?","最受欢迎的是哪个？",["一番人気はどれですか？","一番人気はどこですか？","一番人気はいくらですか？"],0],
+["これにします。","Kore ni shimasu.","我就要这个。",["これにします。","これを返します。","これを見ます。"],0],
+["大丈夫です。","Daijōbu desu.","没问题。",["大丈夫です。","お願いします。","すみません。"],0]]},
+
 };
 let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
@@ -786,6 +942,54 @@ const shoppingDialogue=[
  {question:'レシートはご利用ですか？',questionRomaji:'Reshīto wa go-riyō desu ka?',questionChinese:'需要小票吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请给我。',next:'ありがとうございました。',hint:'想要小票就说“お願いします”。'},
  {question:'ありがとうございました。',questionRomaji:'Arigatō gozaimashita.',questionChinese:'谢谢您。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢您。',next:'',hint:'礼貌回应即可。'}
 ];
+const extraLessons=[
+ ['airport_arrival','✈️ 入境与海关','入境审查、停留时间、酒店'],
+ ['airport_baggage','🧳 行李提取','行李转盘、丢失、损坏'],
+ ['airport_departure','🛫 机场出发','值机、登机口、座位'],
+ ['airport_security','🛂 安检与登机','安检、液体、登机、延误'],
+ ['airport_transport','🚆 机场交通','电车、巴士、出租车'],
+ ['airport_general','💬 机场沟通','语言、求助、洗手间'],
+ ['convenience_food','🍙 便利店食品','饭团、便当、加热'],
+ ['convenience_payment','💳 便利店结账','袋子、小票、付款'],
+ ['convenience_services','📦 便利店服务','ATM、快递、复印'],
+ ['convenience_general','🏪 便利店沟通','推荐、冷藏、保质期'],
+ ['drugstore_medicine','💊 找药与症状','感冒药、头痛药、用法'],
+ ['drugstore_skincare','🧴 护肤与日用品','防晒、化妆水、洗护'],
+ ['drugstore_price','💴 价格与库存','折扣、库存、免税'],
+ ['drugstore_payment','💳 付款与包装','付款、袋子、免税'],
+ ['drugstore_general','🔎 药妆店沟通','说明、推荐、语言'],
+ ['drugstore_general2','✨ 成分与试用','敏感肌、香料、试用']
+];
+function openExtraHub(){
+ showView('extraHub');
+ document.getElementById('extraLessonList').innerHTML=extraLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('')+
+'<div class="plan-card"><b>✈️ 机场完整对话</b><button class="plan-btn" onclick="openAirportDialogue()">开始练习</button></div>'+
+'<div class="plan-card"><b>🏪 便利店完整对话</b><button class="plan-btn" onclick="openConvenienceDialogue()">开始练习</button></div>'+
+'<div class="plan-card"><b>💊 药妆店完整对话</b><button class="plan-btn" onclick="openDrugstoreDialogue()">开始练习</button></div>';
+}
+const airportDialogue=[
+ {question:'観光ですか？',questionRomaji:'Kankō desu ka?',questionChinese:'是来旅游的吗？',answer:'はい、観光です。',answerRomaji:'Hai, kankō desu.',alternatives:['はい、観光です。','観光です。'],chinese:'是的，来旅游。',next:'何日間滞在しますか？',hint:'告诉对方是来旅游的。'},
+ {question:'何日間滞在しますか？',questionRomaji:'Nan-nichikan taizai shimasu ka?',questionChinese:'停留几天？',answer:'5日間です。',answerRomaji:'Itsuka-kan desu.',alternatives:['5日間です。','5日です。'],chinese:'5天。',next:'どこに泊まりますか？',hint:'回答停留天数。'},
+ {question:'どこに泊まりますか？',questionRomaji:'Doko ni tomarimasu ka?',questionChinese:'住在哪里？',answer:'東京のホテルです。',answerRomaji:'Tōkyō no hoteru desu.',alternatives:['東京のホテルです。','ホテルです。'],chinese:'住东京的酒店。',next:'帰りの航空券がありますか？',hint:'告诉对方你住酒店。'},
+ {question:'帰りの航空券がありますか？',questionRomaji:'Kaeri no kōkūken ga arimasu ka?',questionChinese:'有返程机票吗？',answer:'はい、あります。',answerRomaji:'Hai, arimasu.',alternatives:['はい、あります。','あります。'],chinese:'有。',next:'ありがとうございます。',hint:'简单回答“有”。'},
+ {question:'ありがとうございます。',questionRomaji:'Arigatō gozaimasu.',questionChinese:'谢谢。',answer:'どういたしまして。',answerRomaji:'Dō itashimashite.',alternatives:['どういたしまして。','こちらこそ。'],chinese:'不客气。',next:'',hint:'礼貌回应。'}
+];
+const convenienceDialogue=[
+ {question:'温めますか？',questionRomaji:'Atatamemasu ka?',questionChinese:'需要加热吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请加热。',next:'お箸は必要ですか？',hint:'需要加热就说“お願いします”。'},
+ {question:'お箸は必要ですか？',questionRomaji:'O-hashi wa hitsuyō desu ka?',questionChinese:'需要筷子吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请给我。',next:'袋はどうしますか？',hint:'需要筷子就说“お願いします”。'},
+ {question:'袋はどうしますか？',questionRomaji:'Fukuro wa dō shimasu ka?',questionChinese:'袋子要吗？',answer:'袋はいりません。',answerRomaji:'Fukuro wa irimasen.',alternatives:['袋はいりません。','いりません。'],chinese:'不要袋子。',next:'お支払いはどうしますか？',hint:'不要袋子可以说“いりません”。'},
+ {question:'お支払いはどうしますか？',questionRomaji:'O-shiharai wa dō shimasu ka?',questionChinese:'怎么付款？',answer:'カードでお願いします。',answerRomaji:'Kādo de onegai shimasu.',alternatives:['カードでお願いします。','カードで。'],chinese:'请刷卡。',next:'レシートは必要ですか？',hint:'刷卡可以说“カードでお願いします”。'},
+ {question:'レシートは必要ですか？',questionRomaji:'Reshīto wa hitsuyō desu ka?',questionChinese:'需要小票吗？',answer:'はい、お願いします。',answerRomaji:'Hai, onegai shimasu.',alternatives:['はい、お願いします。','お願いします。'],chinese:'好的，请给我。',next:'ありがとうございました。',hint:'需要小票就说“お願いします”。'},
+ {question:'ありがとうございました。',questionRomaji:'Arigatō gozaimashita.',questionChinese:'谢谢。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢。',next:'',hint:'礼貌回应即可。'}
+];
+const drugstoreDialogue=[
+ {question:'何をお探しですか？',questionRomaji:'Nani o o-sagashi desu ka?',questionChinese:'您在找什么？',answer:'風邪薬を探しています。',answerRomaji:'Kaze-gusuri o sagashiteimasu.',alternatives:['風邪薬を探しています。','風邪薬です。'],chinese:'我在找感冒药。',next:'症状は何ですか？',hint:'告诉店员你在找感冒药。'},
+ {question:'症状は何ですか？',questionRomaji:'Shōjō wa nan desu ka?',questionChinese:'有什么症状？',answer:'喉が痛いです。',answerRomaji:'Nodo ga itai desu.',alternatives:['喉が痛いです。','喉が痛い。'],chinese:'喉咙痛。',next:'眠くなりますか？',hint:'简单描述症状。'},
+ {question:'眠くなりますか？',questionRomaji:'Nemuku narimasu ka?',questionChinese:'会犯困吗？',answer:'眠くならないものがいいです。',answerRomaji:'Nemuku naranai mono ga ii desu.',alternatives:['眠くならないものがいいです。','眠くならないもの。'],chinese:'我想要不会犯困的。',next:'一日何回ですか？',hint:'告诉店员你希望不犯困。'},
+ {question:'一日何回ですか？',questionRomaji:'Ichinichi nankai desu ka?',questionChinese:'一天几次？',answer:'一日三回です。',answerRomaji:'Ichinichi sankai desu.',alternatives:['一日三回です。','三回です。'],chinese:'一天三次。',next:'食前ですか、食後ですか？',hint:'回答次数。'},
+ {question:'食前ですか、食後ですか？',questionRomaji:'Shokuzen desu ka, shokugo desu ka?',questionChinese:'饭前还是饭后？',answer:'食後です。',answerRomaji:'Shokugo desu.',alternatives:['食後です。','食後。'],chinese:'饭后。',next:'ありがとうございます。',hint:'回答饭前或饭后。'},
+ {question:'ありがとうございます。',questionRomaji:'Arigatō gozaimasu.',questionChinese:'谢谢。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢您。',next:'',hint:'礼貌回应。'}
+];
 const restaurantLessons=[
  ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
  ['restaurant_order','🍜 点餐','点菜、推荐、数量'],
@@ -974,6 +1178,9 @@ function openShoppingDialogue(){
  document.querySelector('#practice .lesson-title').textContent='购物情景对话';
  resetDialogue();
 }
+function openAirportDialogue(){dialogueMode='airport';dialogueTurns=airportDialogue;dialogueTurn=0;dialogueResults=[];showView('practice');document.querySelector('#practice .lesson-title').textContent='机场情景对话';resetDialogue();}
+function openConvenienceDialogue(){dialogueMode='convenience';dialogueTurns=convenienceDialogue;dialogueTurn=0;dialogueResults=[];showView('practice');document.querySelector('#practice .lesson-title').textContent='便利店情景对话';resetDialogue();}
+function openDrugstoreDialogue(){dialogueMode='drugstore';dialogueTurns=drugstoreDialogue;dialogueTurn=0;dialogueResults=[];showView('practice');document.querySelector('#practice .lesson-title').textContent='药妆店情景对话';resetDialogue();}
 function openHotelDialogue(){
  dialogueMode='hotel'; dialogueTurns=hotelDialogue; dialogueTurn=0; dialogueResults=[];
  showView('practice');
@@ -1015,7 +1222,19 @@ function evaluateDialogue(heard,turn){
     [/以上|はい/,/以上|はい/],
     [/カード/,/お願い|で/]
   ];
-  if(dialogueMode==='shopping'){
+  if(dialogueMode==='airport'){
+ const rr=[[/はい|観光/,/観光/],[/5日|5日間/,/./],[/東京|ホテル/,/./],[/はい|あります/,/./],[/どういたしまして|こちらこそ/,/./]];
+ const rule=rr[dialogueTurn]; return rule ? rule.every(re=>re.test(h)) : false;
+}
+if(dialogueMode==='convenience'){
+ const rr=[[/はい|お願いします/,/./],[/はい|お願いします/,/./],[/袋はいりません|いりません/,/./],[/カードで/,/./],[/はい|お願いします/,/./],[/ありがとうございました|ありがとうございます/,/./]];
+ const rule=rr[dialogueTurn]; return rule ? rule.every(re=>re.test(h)) : false;
+}
+if(dialogueMode==='drugstore'){
+ const rr=[[/風邪薬/,/探しています|です/],[/喉/,/痛い/],[/眠くならない/,/いい/],[/3回|三回/,/です/],[/食後/,/です/],[/ありがとうございました|ありがとうございます/,/./]];
+ const rule=rr[dialogueTurn]; return rule ? rule.every(re=>re.test(h)) : false;
+}
+if(dialogueMode==='shopping'){
  const sh=[[/5000|5000|五千/,/円|です/],[/はい|どうぞ/,/./],[/はい|あります/,/./],[/はい|できます/,/./],[/はい|必要|必要です/,/./],[/はい|どうぞ/,/./],[/はい|お願いします/,/./],[/ありがとうございました|ありがとうございます/,/./]];
  const rule=sh[dialogueTurn];
  return rule ? rule.every(re=>re.test(h)) : false;
@@ -1082,7 +1301,7 @@ function showDialogueReview(){
   const box=document.getElementById('dialogueReview');
   const correct=dialogueResults.filter(x=>x.ok).length;
   box.className='feedback show';
-  let html='<div class="feedback-title">🎉 '+(dialogueMode==='hotel'?'酒店':'餐厅')+'对话完成</div><div class="dialogue-cn">你完成了 '+dialogueTurns.length+' 轮，其中 '+correct+' 轮直接说对。</div>';
+  let html='<div class="feedback-title">🎉 '+(dialogueMode==='hotel'?'酒店':(dialogueMode==='transport'?'交通':(dialogueMode==='shopping'?'购物':(dialogueMode==='airport'?'机场':(dialogueMode==='convenience'?'便利店':'药妆店')))))+'对话完成</div><div class="dialogue-cn">你完成了 '+dialogueTurns.length+' 轮，其中 '+correct+' 轮直接说对。</div>';
   dialogueResults.forEach((x,i)=>{
     html+='<div class="review-item"><div class="'+(x.ok?'review-ok':'review-bad')+'">'+(x.ok?'✓ 第 '+(i+1)+' 轮':'△ 第 '+(i+1)+' 轮')+'</div><div class="review-jp">'+x.answer+'</div><div class="review-sub">'+x.romaji+' · '+x.chinese+'</div></div>';
   });
@@ -1092,7 +1311,7 @@ function showDialogueReview(){
 function processDialogueAnswer(heard){
   const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
   const ok=evaluateDialogue(heard,turn);
-recordLessonResult(dialogueMode==='hotel'?'hotel_dialogue':'restaurant_dialogue',dialogueTurn,ok,'speak');
+recordLessonResult(dialogueMode==='hotel'?'hotel_dialogue':(dialogueMode==='transport'?'transport_dialogue':(dialogueMode==='shopping'?'shopping_dialogue':(dialogueMode+'_dialogue'))),dialogueTurn,ok,'speak');
   dialogueResults[dialogueTurn]={ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese};
   document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
   document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
