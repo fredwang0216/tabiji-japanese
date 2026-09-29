@@ -29,7 +29,10 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .text-answer input:focus{border-color:var(--accent)}
 .text-answer button{background:#191919;color:#fff;border-radius:14px;padding:0 16px;font-weight:700}
 .progress-dialogue{height:5px;background:#e4ddd5;border-radius:9px;margin:12px 0 4px;overflow:hidden}
-.progress-dialogue i{display:block;height:100%;background:var(--accent);width:14.28%;transition:width .25s}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.progress-dialogue i{display:block;height:100%;background:var(--accent);width:14.28%;transition:width .25s}
+.review-item{padding:12px 0;border-top:1px solid var(--line)}.review-item:first-child{border-top:0}
+.review-ok{color:var(--green);font-weight:800}.review-bad{color:#d85a4a;font-weight:800}
+.review-jp{font-size:19px;font-weight:700;margin-top:4px}.review-sub{color:var(--muted);font-size:13px;margin-top:3px}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
@@ -72,6 +75,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div><div class="progress-dialogue"><i id="dialogueProgress"></i></div><div class="tip" id="dialogueStep">第 1 / 7 轮</div></div>
 <div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
 <div id="dialogueFeedback" class="feedback"></div>
+<div id="dialogueReview" class="feedback"></div>
 <button class="mic" id="mic" onclick="startVoice()">🎙️</button><div class="status" id="status">点击麦克风，用日语回答</div>
 <div class="tip" style="text-align:center">支持 iPhone Safari 的语音识别；也可以直接输入。</div>
 </section>
@@ -264,6 +268,7 @@ const dialogueTurns=[
   }
 ];
 let dialogueTurn=0;
+let dialogueResults=[];
 
 function speakDialogueQuestion(turnIndex){
   const turn=dialogueTurns[turnIndex]||dialogueTurns[0];
@@ -319,9 +324,31 @@ function submitTextAnswer(){
   input.value='';
   processDialogueAnswer(heard);
 }
+function resetDialogue(){
+  dialogueTurn=0; dialogueResults=[];
+  document.getElementById('chat').innerHTML='<div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div>';
+  document.getElementById('dialogueFeedback').className='feedback';
+  document.getElementById('dialogueReview').className='feedback';
+  document.getElementById('dialogueProgress').style.width='14.28%';
+  document.getElementById('dialogueStep').textContent='第 1 / 7 轮';
+  document.getElementById('status').textContent='点击麦克风，用日语回答';
+  document.getElementById('mic').disabled=false;
+}
+function showDialogueReview(){
+  const box=document.getElementById('dialogueReview');
+  const correct=dialogueResults.filter(x=>x.ok).length;
+  box.className='feedback show';
+  let html='<div class="feedback-title">🎉 餐厅对话完成</div><div class="dialogue-cn">你完成了 7 轮，其中 '+correct+' 轮直接说对。</div>';
+  dialogueResults.forEach((x,i)=>{
+    html+='<div class="review-item"><div class="'+(x.ok?'review-ok':'review-bad')+'">'+(x.ok?'✓ 第 '+(i+1)+' 轮':'△ 第 '+(i+1)+' 轮')+'</div><div class="review-jp">'+x.answer+'</div><div class="review-sub">'+x.romaji+' · '+x.chinese+'</div></div>';
+  });
+  html+='<button class="repeat" onclick="resetDialogue()">🔄 再练一次</button>';
+  box.innerHTML=html;
+}
 function processDialogueAnswer(heard){
   const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
   const ok=evaluateDialogue(heard,turn);
+  dialogueResults.push({ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese});
   document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
   document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
   showDialogueFeedback(ok,heard,turn);
@@ -336,7 +363,7 @@ function processDialogueAnswer(heard){
       dialogueTurn++;
       document.getElementById('dialogueProgress').style.width=((dialogueTurn/dialogueTurns.length)*100)+'%';
       document.getElementById('dialogueStep').textContent=isLast?'🎉 7 / 7 轮完成':('第 '+(dialogueTurn+1)+' / '+dialogueTurns.length+' 轮');
-      if(isLast){document.getElementById('status').textContent='🎉 餐厅对话完成！';document.getElementById('mic').disabled=true;}
+      if(isLast){document.getElementById('status').textContent='🎉 餐厅对话完成！';document.getElementById('mic').disabled=true;showDialogueReview();}
     },700);
   }
 }
