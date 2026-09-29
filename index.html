@@ -62,10 +62,19 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 </section>
 
 <section id="daily" class="view">
-<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
-<div class="phrase-card"><b id="dailyHeadline">今天学 5 句，开口说出来。</b><div class="tip" id="dailySub">完成听、记、说、情景四步，就完成今天的学习。</div></div>
+<div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">今天的学习</div></div>
+<div class="phrase-card"><b id="dailyHeadline">今天学什么，由 Tabiji 帮你决定。</b><div class="tip" id="dailySub">根据距离出发时间、场景重要程度和你的掌握情况安排。</div></div>
+<div id="dailyFocus"></div>
+<div class="section-label">今天有多少时间？</div>
+<div class="lesson-grid" style="grid-template-columns:repeat(3,1fr)">
+<button class="lesson-pick" onclick="setDailyMinutes(5)"><b>⚡ 5 分钟</b><small>约 3 句</small></button>
+<button class="lesson-pick" onclick="setDailyMinutes(10)"><b>🔥 10 分钟</b><small>约 5 句</small></button>
+<button class="lesson-pick" onclick="setDailyMinutes(20)"><b>💪 20 分钟</b><small>约 8 句 + 对话</small></button>
+</div>
 <div id="dailySteps" class="lesson-grid"></div>
-<div id="dailyProgress" style="margin:14px 0"></div><div class="section-label">📚 今天到期的复习</div><div id="weakReview" class="lesson-grid"></div><div id="srsExplain" class="tip" style="margin-top:12px">复习节奏：答错今天再见；答对后会逐渐延长到 1、2、4、7、14 天。说出来比选对更能提高熟练度。</div>
+<div id="dailyProgress" style="margin:14px 0"></div>
+<div class="section-label">📚 今天到期的复习</div><div id="weakReview" class="lesson-grid"></div>
+<div id="srsExplain" class="tip" style="margin-top:12px">复习节奏：答错后尽快回来；答对后逐渐延长复习间隔。</div>
 </section>
 
 <section id="trip" class="view">
@@ -828,35 +837,73 @@ function renderMasterySummary(){
  return weak.map((p,i)=>'<button class="lesson-pick" onclick="openScene(\''+p.s+'\')"><span>'+p.score+'/5</span><b>'+(i+1)+'. '+p.jp+'</b><small>'+p.cn+' · '+p.romaji+(p.streak?' · 连续 '+p.streak+' 次':'')+'</small>'+masteryHTML(p.s,p.i)+'</button>').join('');
 }
 const dailyTasks=[
- {id:'listen',icon:'🔊',title:'听 5 句',desc:'先听今天的核心表达，熟悉声音和节奏。'},
- {id:'learn',icon:'🧠',title:'记 5 句',desc:'用选择题确认你真的理解了。'},
- {id:'speak',icon:'🎙️',title:'说 5 句',desc:'自己开口说一遍，练习真正旅行时会用到的表达。'},
- {id:'roleplay',icon:'🍜',title:'情景对话',desc:'把今天学的句子放进真实旅行场景。'}
+ {id:'learn',icon:'🧠',title:'开始今天的学习',desc:'Tabiji 已经选好今天最值得学的内容。'},
+ {id:'speak',icon:'🎙️',title:'开口说一遍',desc:'完成核心句子后，用自己的声音说出来。'},
+ {id:'roleplay',icon:'🎭',title:'情景练习',desc:'时间充足时，把今天的内容放进旅行场景。'}
 ];
-let dailyState=JSON.parse(localStorage.getItem('tabiji_daily')||'null')||{date:'',done:{listen:false,learn:false,speak:false,roleplay:false},streak:0};
-function localDateKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+let dailyState=JSON.parse(localStorage.getItem('tabiji_daily')||'null')||{date:'',done:{learn:false,speak:false,roleplay:false},streak:0,minutes:10,scene:''};
 function ensureDaily(){
  const today=localDateKey();
- if(dailyState.date!==today){dailyState={date:today,done:{listen:false,learn:false,speak:false,roleplay:false},streak:dailyState.streak||0};saveDaily();}
+ if(dailyState.date!==today){
+   dailyState={date:today,done:{learn:false,speak:false,roleplay:false},streak:dailyState.streak||0,minutes:dailyState.minutes||10,scene:''};
+   saveDaily();
+ }
 }
 function saveDaily(){localStorage.setItem('tabiji_daily',JSON.stringify(dailyState))}
-function openDaily(){
- ensureDaily(); showView('daily'); renderDaily();
+function getDailyFocus(){
+ const sorted=getPriorityCategories();
+ for(const cat of sorted){
+   const sceneId=cat.scenes.find(s=>data[s]&&data[s].phrases&&data[s].phrases.length);
+   if(sceneId) return {cat,scene:sceneId};
+ }
+ return {cat:null,scene:'restaurant_order'};
 }
-function renderDaily(){
+function getDailyLimit(){
+ return dailyState.minutes===5?3:(dailyState.minutes===20?8:5);
+}
+function prepareDaily(){
+ ensureDaily();
+ const focus=getDailyFocus();
+ dailyState.scene=focus.scene;
+ saveDaily();
+ return focus;
+}
+function openDaily(){
+ const focus=prepareDaily();
+ showView('daily'); renderDaily(focus);
+}
+function setDailyMinutes(minutes){
+ ensureDaily(); dailyState.minutes=minutes; dailyState.done={learn:false,speak:false,roleplay:false};
+ const focus=prepareDaily(); renderDaily(focus);
+}
+function renderDaily(focus){
+ focus=focus||prepareDaily();
+ const days=daysUntilTrip(), limit=getDailyLimit();
+ const cat=focus.cat;
+ const title=cat?cat.icon+' '+cat.name:'旅行日语';
+ const urgency=days===null?'根据你的掌握情况自动安排':(days<=7?'出发很近了，优先练马上会用到的内容':(days<=30?'进入实战阶段，开始集中练高频场景':'提前铺基础，留时间给复习'));
+ document.getElementById('dailyHeadline').textContent='今天最值得学：'+title;
+ document.getElementById('dailySub').textContent=urgency+' · '+dailyState.minutes+' 分钟约 '+limit+' 句';
+ document.getElementById('dailyFocus').innerHTML='<div class="plan-card"><b>'+title+'</b><p>'+(cat?cat.desc:'核心旅行表达')+'</p><small>今天学习 '+limit+' 句 · '+data[focus.scene].title+'</small><button class="plan-btn" onclick="startDailyStep(\'learn\')">开始 →</button></div>';
  const completed=Object.values(dailyState.done).filter(Boolean).length;
- const el=document.getElementById('dailySteps');
- el.innerHTML=dailyTasks.map((t,i)=>'<button class="lesson-pick" onclick="startDailyStep(\''+t.id+'\')"><span>'+(dailyState.done[t.id]?'✓':'›')+'</span><b>'+t.icon+' '+t.title+'</b><small>'+t.desc+'</small></button>').join('');
- document.getElementById('dailyProgress').innerHTML='<div class="tip">今日进度：'+completed+' / 4</div><div class="progress"><div class="progress-bar" style="width:'+(completed*25)+'%"></div></div>';
+ document.getElementById('dailySteps').innerHTML=dailyTasks.map(t=>'<button class="lesson-pick" onclick="startDailyStep(\''+t.id+'\')"><span>'+(dailyState.done[t.id]?'✓':'›')+'</span><b>'+t.icon+' '+t.title+'</b><small>'+t.desc+'</small></button>').join('');
+ document.getElementById('dailyProgress').innerHTML='<div class="tip">今日进度：'+completed+' / 3</div><div class="progress"><div class="progress-bar" style="width:'+(completed/3*100)+'%"></div></div>';
  document.getElementById('weakReview').innerHTML=renderMasterySummary();
- if(completed===4){document.getElementById('dailyHeadline').textContent='🎉 今天完成了！';document.getElementById('dailySub').textContent='明天回来，Tabiji 会继续下一天的学习。';}
 }
 function startDailyStep(id){
- if(id==='listen'){dailyState.done.listen=true;saveDaily();renderDaily();openScene('restaurant_order');return}
- if(id==='learn'){dailyState.done.learn=true;saveDaily();renderDaily();openScene('restaurant_menu');return}
- if(id==='speak'){dailyState.done.speak=true;saveDaily();openScene('restaurant_preferences');return}
- if(id==='roleplay'){dailyState.done.roleplay=true;saveDaily();renderDaily();showView('practice');return}
+ const focus=prepareDaily();
+ if(id==='learn'){dailyState.done.learn=true;saveDaily();renderDaily(focus);startDailyLesson(focus.scene);return}
+ if(id==='speak'){dailyState.done.speak=true;saveDaily();renderDaily(focus);startDailyLesson(focus.scene);return}
+ if(id==='roleplay'){
+   dailyState.done.roleplay=true;saveDaily();renderDaily(focus);
+   if(focus.cat&&focus.cat.id==='restaurant'){showView('practice');}
+   else {startDailyLesson(focus.scene);}
+ }
 }
+function startDailyLesson(sceneId){
+ dailyMode=true; dailySceneLimit=getDailyLimit(); scene=sceneId; idx=0; renderPhrase(); showView('lesson');
+}
+let dailyMode=false, dailySceneLimit=5;
 const tripCurriculum=[
  ['D1','🗣️ 生存日语','问候、谢谢、请问、听不懂时怎么说'],
  ['D2','🍜 餐厅','入店、点餐、推荐、结账'],
@@ -875,7 +922,7 @@ const tripCurriculum=[
 ];
 const TRIP_KEY='tabiji_trip_v1';
 const PRIORITY_CATEGORIES=[
-{id:'survival',icon:'🗣️',name:'生存日语',need:90,scenes:['restaurant','restaurant_arrive','restaurant_order','restaurant_payment','hotel_general','airport_general'],desc:'任何场景都能马上用到'},
+{id:'survival',icon:'🗣️',name:'生存日语',need:90,scenes:['restaurant','restaurant_arrive','restaurant_order','restaurant_bill','hotel_general','airport_general'],desc:'任何场景都能马上用到'},
 {id:'restaurant',icon:'🍜',name:'餐厅',need:30,scenes:['restaurant','restaurant_arrive','restaurant_order','restaurant_preferences','restaurant_payment','restaurant_takeout','restaurant_problem','restaurant_departure'],desc:'点餐、推荐、结账'},
 {id:'hotel',icon:'🏨',name:'酒店',need:21,scenes:['hotel_arrival','hotel_room','hotel_luggage','hotel_room_problem','hotel_requests','hotel_breakfast','hotel_late_checkout','hotel_checkout','hotel_taxi','hotel_general'],desc:'入住、房间、退房'},
 {id:'transport',icon:'🚆',name:'交通',need:14,scenes:['transport_station','transport_ticket','transport_train','transport_transfer','transport_shinkansen','transport_bus','transport_taxi','transport_lost','transport_delay','transport_access'],desc:'问路、换乘、买票'},
@@ -889,7 +936,7 @@ function openTripSetup(){showView('trip');const input=document.getElementById('t
 function saveTripDate(){const input=document.getElementById('tripDateInput');if(!input.value)return;localStorage.setItem(TRIP_KEY,input.value);renderTripPlan();renderHomePriority()}
 function categoryPriority(cat,days){const deficit=cat.scenes.reduce((sum,s)=>{const ps=data[s]?.phrases||[];return sum+ps.reduce((n,_,i)=>n+(1-getMastery(s,i)/5),0)},0);const urgency=days===null?0:Math.max(0,cat.need-days);const lead=days===null?0:Math.max(0,cat.need*2-days);return Math.round(urgency*8+lead*2+deficit*.5)}
 function getPriorityCategories(){const days=daysUntilTrip();return PRIORITY_CATEGORIES.map(c=>({...c,score:categoryPriority(c,days)})).sort((a,b)=>b.score-a.score)}
-function renderHomePriority(){const el=document.getElementById('priorityHome');if(!el)return;const days=daysUntilTrip();if(days===null){el.innerHTML='<div class="phrase-card"><b>先告诉我你的旅行日期</b><div class="tip">提前几个月开始也没关系。Tabiji 会把“现在该学”和“以后再学”分开。</div><button class="plan-btn" onclick="openTripSetup()">设置出发日期 →</button></div>';return}const sorted=getPriorityCategories().slice(0,3);document.getElementById('homeEyebrow').innerHTML='日本旅行 · '+(days<0?'日期已过':(days===0?'今天出发！':'距离出发还有 <b>'+days+' 天</b>'));document.getElementById('homeHeroTitle').innerHTML=days<=7?'马上要出发了，<br>先把最重要的练会。':(days<=30?'越来越近了，<br>开始进入实战。':'还有充足时间，<br>按优先级慢慢学。');document.getElementById('homeHeroSub').textContent='Tabiji 会根据你什么时候真正需要用到日语，动态安排学习顺序。';el.innerHTML='<div class="priority-stack">'+sorted.map((x,i)=>'<button class="lesson-pick" onclick="openScene(\''+x.scenes[0]+'\')"><span>'+['🔥','🟠','🟡'][i]+'</span><b>'+x.icon+' '+x.name+'</b><small>'+x.desc+' · '+(i===0?'现在优先学习':i===1?'接下来学习':'可以慢慢学')+'</small></button>').join('')+'</div><button class="plan-btn" onclick="openTripSetup()">查看完整学习计划 →</button>'}
+function renderHomePriority(){const el=document.getElementById('priorityHome');if(!el)return;const days=daysUntilTrip();if(days===null){el.innerHTML='<div class="phrase-card"><b>先告诉我你的旅行日期</b><div class="tip">提前几个月开始也没关系。Tabiji 会把“现在该学”和“以后再学”分开。</div><button class="plan-btn" onclick="openTripSetup()">设置出发日期 →</button></div>';return}const sorted=getPriorityCategories().slice(0,3);document.getElementById('homeEyebrow').innerHTML='日本旅行 · '+(days<0?'日期已过':(days===0?'今天出发！':'距离出发还有 <b>'+days+' 天</b>'));document.getElementById('homeHeroTitle').innerHTML=days<=7?'马上要出发了，<br>先把最重要的练会。':(days<=30?'越来越近了，<br>开始进入实战。':'还有充足时间，<br>按优先级慢慢学。');document.getElementById('homeHeroSub').textContent='Tabiji 会根据你什么时候真正需要用到日语，动态安排学习顺序。';el.innerHTML='<div class="priority-stack">'+sorted.map((x,i)=>'<button class="lesson-pick" onclick="openScene(\''+x.scenes[0]+'\')"><span>'+['🔥','🟠','🟡'][i]+'</span><b>'+x.icon+' '+x.name+'</b><small>'+x.desc+' · '+(i===0?'现在优先学习':i===1?'接下来学习':'可以慢慢学')+'</small></button>').join('')+'</div><button class="plan-btn" onclick="openTripSetup()">查看完整学习计划 →</button><button class="plan-btn" onclick="openDaily()">开始今天的学习 →</button>'}
 function renderTripPlan(){const days=daysUntilTrip(),status=document.getElementById('tripStatus'),result=document.getElementById('tripPlanResult');if(!status||!result)return;if(days===null){status.innerHTML='';result.innerHTML='';return}const phase=days<=7?'🔥 最后冲刺':(days<=30?'🟠 实战阶段':(days<=60?'🟡 核心场景阶段':'🌿 基础铺垫阶段'));status.innerHTML='<div class="phrase-card"><b>'+phase+'</b><div class="tip">'+(days<0?'旅行日期已过去，请重新选择日期。':(days===0?'今天出发。优先复习机场、交通和生存日语。':'距离出发还有 <b>'+days+' 天</b>。学习顺序会随着日期接近自动变化。'))+'</div></div>';const sorted=getPriorityCategories(),now=sorted.slice(0,4),later=sorted.slice(4);result.innerHTML='<div class="section-label">🔥 现在优先</div>'+now.map(x=>'<div class="plan-card"><b>'+x.icon+' '+x.name+'</b><p>'+x.desc+'</p><small>建议提前 '+x.need+' 天开始系统学习</small></div>').join('')+'<div class="section-label">🌱 之后再学</div>'+later.map(x=>'<div class="plan-card"><b>'+x.icon+' '+x.name+'</b><p>'+x.desc+'</p><small>建议提前 '+x.need+' 天开始</small></div>').join('')}
 function setTripPlan(days){const d=new Date();d.setDate(d.getDate()+days);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');localStorage.setItem(TRIP_KEY,k);renderTripPlan();renderHomePriority()}
 const hotelLessons=[
@@ -1037,9 +1084,9 @@ function openRestaurantHub(){
   const el=document.getElementById('restaurantLessonList');
   el.innerHTML=restaurantLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
 }
-function openScene(s){scene=s;idx=0;renderPhrase();showView('lesson');}
+function openScene(s){dailyMode=false;scene=s;idx=0;renderPhrase();showView('lesson');}
 function goHome(){viewHistory=[];showView('home',document.querySelector('.nav button'),true)}
-function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];document.getElementById('progress').style.width=((idx+1)/data[scene].phrases.length*100)+'%';document.getElementById('nextWrap').style.display='none';
+function renderPhrase(){const p=data[scene].phrases[idx];document.getElementById('lessonTitle').textContent=data[scene].title;document.getElementById('jp').textContent=p[0];document.getElementById('romaji').textContent=p[1];document.getElementById('cn').textContent=p[2];const totalForLesson=dailyMode?Math.min(dailySceneLimit,data[scene].phrases.length):data[scene].phrases.length;document.getElementById('progress').style.width=((idx+1)/totalForLesson*100)+'%';document.getElementById('nextWrap').style.display='none';
 document.getElementById('feedback').classList.remove('show');
 document.getElementById('feedbackTitle').textContent='';
 document.getElementById('feedbackWhy').textContent='';
@@ -1106,7 +1153,7 @@ function repeatPhrase(){
     try{r.start()}catch(e){activeRecognition=null;btn.disabled=false;btn.textContent='🎙️ 再说一遍';status.textContent='启动失败，再试一次。'}
   },700);
 }
-function nextPhrase(){if(idx<data[scene].phrases.length-1){idx++;renderPhrase()}else{showView('practice');}}
+function nextPhrase(){const totalForLesson=dailyMode?Math.min(dailySceneLimit,data[scene].phrases.length):data[scene].phrases.length;if(idx<totalForLesson-1){idx++;renderPhrase()}else{dailyMode=false;showView('daily');renderDaily(prepareDaily());}}
 function speak(){
   const u=new SpeechSynthesisUtterance(data[scene].phrases[idx][0]);
   u.lang='ja-JP';u.rate=.82;
