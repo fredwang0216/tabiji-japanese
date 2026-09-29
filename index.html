@@ -20,7 +20,8 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .dialogue-good{border-color:var(--green);background:#edf8f2}
 .dialogue-bad{border-color:#d85a4a;background:#fff0ed}
 .dialogue-jp{font-size:22px;font-weight:800;margin-top:8px}
-.dialogue-cn{color:var(--muted);margin-top:6px;line-height:1.5}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.dialogue-cn{color:var(--muted);margin-top:6px;line-height:1.5}
+.dialogue-why{color:#8b867f;font-size:14px;margin-top:4px;font-style:italic}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
@@ -178,59 +179,80 @@ function speak(){
 const dialogueTurns=[
   {
     question:'何名様ですか？',
+    questionRomaji:'Nan-mei-sama desu ka?',
+    questionChinese:'请问几位？',
     answer:'2人です。',
-    alternatives:['二人です。','ふたりです。','2人です','二人です','ふたりです'],
+    answerRomaji:'Futari desu.',
+    alternatives:["二人です。","ふたりです。","2人です","二人です","ふたりです"],
     chinese:'两位。',
     next:'ご注文はお決まりですか？',
-    hint:'回答人数：ふたりです。'
+    hint:'人数を答えます。'
   },
   {
     question:'ご注文はお決まりですか？',
+    questionRomaji:'Go-chūmon wa okimari desu ka?',
+    questionChinese:'决定好点什么了吗？',
     answer:'ラーメンを一つください。',
-    alternatives:['ラーメン一つください。','ラーメンをください。','ラーメンお願いします。'],
+    answerRomaji:'Rāmen o hitotsu kudasai.',
+    alternatives:[],
     chinese:'请给我一碗拉面。',
     next:'おすすめは何ですか？',
-    hint:'点拉面可以说：ラーメンを一つください。'
+    hint:'ラーメンを注文します。'
   },
   {
     question:'おすすめは何ですか？',
+    questionRomaji:'Osusume wa nan desu ka?',
+    questionChinese:'有什么推荐的吗？',
     answer:'ラーメンがおすすめです。',
-    alternatives:['ラーメンです。','おすすめはラーメンです。'],
+    answerRomaji:'Rāmen ga osusume desu.',
+    alternatives:[],
     chinese:'推荐拉面。',
     next:'飲み物は何にしますか？',
-    hint:'可以回答：ラーメンがおすすめです。'
+    hint:'推荐拉面即可。'
   },
   {
     question:'飲み物は何にしますか？',
+    questionRomaji:'Nomimono wa nani ni shimasu ka?',
+    questionChinese:'饮料要什么？',
     answer:'お水をお願いします。',
-    alternatives:['水をお願いします。','お水ください。','水ください。'],
+    answerRomaji:'O-mizu o onegai shimasu.',
+    alternatives:[],
     chinese:'请给我水。',
     next:'辛いものは大丈夫ですか？',
-    hint:'要水可以说：お水をお願いします。'
+    hint:'要水可以这样说。'
   },
   {
     question:'辛いものは大丈夫ですか？',
+    questionRomaji:'Karai mono wa daijōbu desu ka?',
+    questionChinese:'辣的食物可以吗？',
     answer:'大丈夫です。',
-    alternatives:['はい、大丈夫です。','大丈夫です'],
+    answerRomaji:'Daijōbu desu.',
+    alternatives:[],
     chinese:'没问题。',
     next:'ご注文は以上ですか？',
-    hint:'可以简单回答：大丈夫です。'
+    hint:'简单回答“大丈夫です”。'
   },
   {
     question:'ご注文は以上ですか？',
-    answer:'はい、お願いします。',
-    alternatives:['はい。','以上です。','はい、以上です。'],
+    questionRomaji:'Go-chūmon wa ijō desu ka?',
+    questionChinese:'就这些了吗？',
+    answer:'はい、以上です。',
+    answerRomaji:'Hai, ijō desu.',
+    alternatives:[],
     chinese:'是的，就这些。',
     next:'お会計はどうしますか？',
-    hint:'表示“就这些”：はい、以上です。'
+    hint:'表示“就这些”。'
   },
   {
     question:'お会計はどうしますか？',
+    questionRomaji:'O-kaikei wa dō shimasu ka?',
+    questionChinese:'怎么付款？',
     answer:'カードでお願いします。',
-    alternatives:['カードで。','カードお願いします。'],
+    answerRomaji:'Kādo de onegai shimasu.',
+    alternatives:[],
     chinese:'请刷卡。',
     next:'ありがとうございます！',
-    hint:'刷卡可以说：カードでお願いします。'
+    hint:'表示用信用卡付款。'
   }
 ];
 let dialogueTurn=0;
@@ -261,13 +283,18 @@ function showDialogueFeedback(ok,heard,turn){
   const box=document.getElementById('dialogueFeedback');
   box.className='feedback show '+(ok?'dialogue-good':'dialogue-bad');
   box.innerHTML=
-    '<div class="feedback-title">'+(ok?'✓ 说对了！':'△ 这句话和标准回答不一样')+'</div>'+
-    '<div class="feedback-why">我听到的是：</div>'+
+    '<div class="feedback-title">'+(ok?'✓ 说对了！':'△ 可以再练一次')+'</div>'+
+    '<div class="feedback-why">店员问：</div>'+
+    '<div class="dialogue-jp">'+turn.question+'</div>'+
+    '<div class="dialogue-why">'+turn.questionRomaji+'</div>'+
+    '<div class="dialogue-cn">'+turn.questionChinese+'</div>'+
+    '<div class="feedback-why" style="margin-top:12px">你说：</div>'+
     '<div class="dialogue-jp">'+escapeHtml(heard)+'</div>'+
-    '<div class="feedback-why">推荐这样说：</div>'+
+    '<div class="feedback-why">推荐回答：</div>'+
     '<div class="dialogue-jp">'+turn.answer+'</div>'+
+    '<div class="dialogue-why">'+turn.answerRomaji+'</div>'+
     '<div class="dialogue-cn">'+turn.chinese+'</div>'+
-    (ok?'':'<div class="feedback-why" style="margin-top:10px">你刚才说的是「'+escapeHtml(heard)+'」，意思是“你叫什么名字”。店员问的是“几位”，所以这里要回答人数。</div>');
+    (ok?'':'<div class="feedback-why" style="margin-top:10px">'+turn.hint+'</div>');
 }
 function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
