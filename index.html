@@ -57,6 +57,18 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
 </section>
 
+<section id="trip" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">日本旅行计划</div></div>
+<div class="phrase-card"><b>出发前，学最需要的。</b><div class="tip">Tabiji 会按照旅行时间，把餐厅、酒店、交通、购物等内容排成一个轻量学习计划。</div></div>
+<div class="section-label">你的旅行还有多久？</div>
+<div class="lesson-grid">
+<button class="lesson-pick" onclick="setTripPlan(7)"><b>⚡ 7 天</b><small>每天约 10 分钟 · 旅行生存冲刺</small></button>
+<button class="lesson-pick" onclick="setTripPlan(14)"><b>🔥 14 天</b><small>每天约 10 分钟 · 覆盖主要旅行场景</small></button>
+<button class="lesson-pick" onclick="setTripPlan(30)"><b>🌿 30 天</b><small>每天约 10 分钟 · 完整旅行准备</small></button>
+</div>
+<div id="tripPlanResult"></div>
+</section>
+
 <section id="plans" class="view">
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">Tabiji 会员</div></div>
 <div class="phrase-card"><b>为旅行学日语，随时打开就能学。</b><div class="tip">核心旅行内容永久免费。Pro 解锁智能练习和个性化能力。无广告、无体力限制。</div></div>
@@ -259,6 +271,27 @@ let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+const tripCurriculum=[
+ ['D1','🗣️ 生存日语','问候、谢谢、请问、听不懂时怎么说'],
+ ['D2','🍜 餐厅','入店、点餐、推荐、结账'],
+ ['D3','🏨 酒店','入住、行李、Wi-Fi、房间问题'],
+ ['D4','🚆 交通','车站、买票、换乘、问路'],
+ ['D5','🛍️ 购物','价格、尺寸、试穿、结账'],
+ ['D6','🏪 便利店','买东西、袋子、加热、付款'],
+ ['D7','✈️ 机场','值机、行李、登机、问路'],
+ ['D8','☕ 咖啡店','点饮料、堂食、外带'],
+ ['D9','💊 药妆店','找商品、症状、推荐'],
+ ['D10','♨️ 温泉','入场、规则、设施'],
+ ['D11','🎟️ 景点与门票','购票、预约、开放时间'],
+ ['D12','🧳 行李','寄存、取件、超重'],
+ ['D13','🆘 出问题','听不懂、迷路、遗失物品'],
+ ['D14','🎭 综合情景','完整日本旅行角色扮演']
+];
+function setTripPlan(days){
+  const n=Math.min(days,14), list=tripCurriculum.slice(0,n);
+  const el=document.getElementById('tripPlanResult');
+  el.innerHTML='<div class="section-label">'+days+' 天计划</div><div class="plan-card"><p>每天约 10 分钟。先听核心表达，再做选择题，最后开口完成情景对话。</p><ol class="plan-list">'+list.map(x=>'<li><b>'+x[0]+' '+x[1]+'</b><br><small>'+x[2]+'</small></li>').join('')+'</ol><button class="plan-btn" onclick="goHome()">开始今天的学习</button></div>';
+}
 const restaurantLessons=[
  ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
  ['restaurant_order','🍜 点餐','点菜、推荐、数量'],
