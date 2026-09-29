@@ -992,14 +992,22 @@ function normalizeJapanese(s){
   return s.replace(/[。！？!?、\s]/g,'').replace(/[0-9]/g,m=>String.fromCharCode(m.charCodeAt(0)+0));
 }
 function normalizeJapanese(s){
-  return s.replace(/[。！？!?、\s]/g,'');
+  return String(s||'')
+    .replace(/[。！？!?、，,.\s]/g,'')
+    .replace(/二名/g,'2人')
+    .replace(/二人/g,'2人')
+    .replace(/ふたり/g,'2人')
+    .replace(/一名/g,'1人')
+    .replace(/三名/g,'3人')
+    .replace(/四名/g,'4人')
+    .replace(/五名/g,'5人');
 }
 function evaluateDialogue(heard,turn){
   const h=normalizeJapanese(heard);
-  const all=[turn.answer,...turn.alternatives].map(normalizeJapanese);
+  const all=[turn.answer,...(turn.alternatives||[])].map(normalizeJapanese);
   if(all.includes(h)) return true;
   const rules=[
-    [/ふたり|二人|2人/,/です/],
+    [/ふたり|二人|2人|2名/,/^.*$/],
     [/ラーメン/,/ください|お願い/],
     [/ラーメン/,/おすすめ/],
     [/水|お水/,/ください|お願い/],
@@ -1030,7 +1038,7 @@ function showDialogueFeedback(ok,heard,turn){
   const box=document.getElementById('dialogueFeedback');
   box.className='feedback show '+(ok?'dialogue-good':'dialogue-bad');
   box.innerHTML=
-    '<div class="feedback-title">'+(ok?'✓ 说对了！':'△ 可以再练一次')+'</div>'+
+    '<div class="feedback-title">'+(ok?'✓ 说对了！':'△ 这次没有识别正确')+'</div>'+
     '<div class="feedback-why">店员问：</div>'+
     '<div class="dialogue-jp">'+turn.question+'</div>'+
     '<div class="dialogue-why">'+turn.questionRomaji+'</div>'+
@@ -1118,9 +1126,12 @@ function startVoice(){
     r.lang='ja-JP';r.interimResults=false;r.continuous=false;r.maxAlternatives=3;
     r.onstart=()=>{status.textContent='正在听，请回答：「'+turn.question+'」';mic.disabled=false};
     r.onresult=e=>{
-      const heard=e.results[0][0].transcript.trim();
+      const result=e.results[0];
+      const heardList=Array.from(result).map(x=>x.transcript.trim()).filter(Boolean);
       activeRecognition=null;
-      processDialogueAnswer(heard);
+      const turnNow=dialogueTurns[dialogueTurn]||dialogueTurns[0];
+      const accepted=heardList.find(x=>evaluateDialogue(x,turnNow));
+      processDialogueAnswer(accepted||heardList[0]||'');
     };
     r.onerror=e=>{
       activeRecognition=null;mic.disabled=false;
