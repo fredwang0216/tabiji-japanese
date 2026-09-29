@@ -181,7 +181,56 @@ const dialogueTurns=[
     answer:'2人です。',
     alternatives:['二人です。','ふたりです。','2人です','二人です','ふたりです'],
     chinese:'两位。',
-    next:'ご注文はお決まりですか？'
+    next:'ご注文はお決まりですか？',
+    hint:'回答人数：ふたりです。'
+  },
+  {
+    question:'ご注文はお決まりですか？',
+    answer:'ラーメンを一つください。',
+    alternatives:['ラーメン一つください。','ラーメンをください。','ラーメンお願いします。'],
+    chinese:'请给我一碗拉面。',
+    next:'おすすめは何ですか？',
+    hint:'点拉面可以说：ラーメンを一つください。'
+  },
+  {
+    question:'おすすめは何ですか？',
+    answer:'ラーメンがおすすめです。',
+    alternatives:['ラーメンです。','おすすめはラーメンです。'],
+    chinese:'推荐拉面。',
+    next:'飲み物は何にしますか？',
+    hint:'可以回答：ラーメンがおすすめです。'
+  },
+  {
+    question:'飲み物は何にしますか？',
+    answer:'お水をお願いします。',
+    alternatives:['水をお願いします。','お水ください。','水ください。'],
+    chinese:'请给我水。',
+    next:'辛いものは大丈夫ですか？',
+    hint:'要水可以说：お水をお願いします。'
+  },
+  {
+    question:'辛いものは大丈夫ですか？',
+    answer:'大丈夫です。',
+    alternatives:['はい、大丈夫です。','大丈夫です'],
+    chinese:'没问题。',
+    next:'ご注文は以上ですか？',
+    hint:'可以简单回答：大丈夫です。'
+  },
+  {
+    question:'ご注文は以上ですか？',
+    answer:'はい、お願いします。',
+    alternatives:['はい。','以上です。','はい、以上です。'],
+    chinese:'是的，就这些。',
+    next:'お会計はどうしますか？',
+    hint:'表示“就这些”：はい、以上です。'
+  },
+  {
+    question:'お会計はどうしますか？',
+    answer:'カードでお願いします。',
+    alternatives:['カードで。','カードお願いします。'],
+    chinese:'请刷卡。',
+    next:'ありがとうございます！',
+    hint:'刷卡可以说：カードでお願いします。'
   }
 ];
 let dialogueTurn=0;
@@ -189,13 +238,24 @@ let dialogueTurn=0;
 function normalizeJapanese(s){
   return s.replace(/[。！？!?、\s]/g,'').replace(/[0-9]/g,m=>String.fromCharCode(m.charCodeAt(0)+0));
 }
-function evaluateDialogue(heard,target,alternatives){
+function normalizeJapanese(s){
+  return s.replace(/[。！？!?、\s]/g,'');
+}
+function evaluateDialogue(heard,turn){
   const h=normalizeJapanese(heard);
-  const all=[target,...alternatives].map(normalizeJapanese);
+  const all=[turn.answer,...turn.alternatives].map(normalizeJapanese);
   if(all.includes(h)) return true;
-  // Accept common speech-recognition variations for the key meaning.
-  if((h.includes('ふたり')||h.includes('二人')||h.includes('2人')) && h.includes('です')) return true;
-  return false;
+  const rules=[
+    [/ふたり|二人|2人/,/です/],
+    [/ラーメン/,/ください|お願い/],
+    [/ラーメン/,/おすすめ/],
+    [/水|お水/,/ください|お願い/],
+    [/大丈夫/,/大丈夫/],
+    [/以上|はい/,/以上|はい/],
+    [/カード/,/お願い|で/]
+  ];
+  const rule=rules[dialogueTurn];
+  return rule ? rule.every(re=>re.test(h)) : false;
 }
 function showDialogueFeedback(ok,heard,turn){
   const box=document.getElementById('dialogueFeedback');
@@ -225,17 +285,23 @@ function startVoice(){
     r.onresult=e=>{
       const heard=e.results[0][0].transcript.trim();
       activeRecognition=null;
-      const ok=evaluateDialogue(heard,turn.answer,turn.alternatives);
+      const ok=evaluateDialogue(heard,turn);
       document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
       status.textContent=ok?'✓ 回答正确':'需要再练一次';
       showDialogueFeedback(ok,heard,turn);
       if(ok){
         setTimeout(()=>{
-          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+turn.next+'</div>');
-          const u=new SpeechSynthesisUtterance('いいですね！'+turn.next);
+          const isLast=dialogueTurn>=dialogueTurns.length-1;
+          const nextText=isLast?'ありがとうございます！':turn.next;
+          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+nextText+'</div>');
+          const u=new SpeechSynthesisUtterance('いいですね！'+nextText);
           u.lang='ja-JP';u.rate=.84;u.onend=()=>{lastSpeechEnd=Date.now()};
           speechSynthesis.cancel();speechSynthesis.speak(u);
           dialogueTurn++;
+          if(isLast){
+            status.textContent='🎉 餐厅对话完成！';
+            mic.disabled=true;
+          }
         },700);
       }
     };
