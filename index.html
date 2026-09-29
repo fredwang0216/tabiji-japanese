@@ -37,7 +37,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
-.view{display:none}.view.active{display:block}.tip{font-size:13px;color:var(--muted);line-height:1.5;margin-top:10px}
+.priority-stack{display:grid;gap:10px}.priority-stack .lesson-pick{margin:0}.priority-stack .lesson-pick small{display:block}.view{display:none}.view.active{display:block}.tip{font-size:13px;color:var(--muted);line-height:1.5;margin-top:10px}
 @media(max-width:360px){.jp{font-size:27px}.hero h1{font-size:28px}}
 </style>
 </head>
@@ -46,7 +46,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <header><div class="brand">tabiji<span>·</span></div><div class="streak">🔥 3 天</div></header>
 
 <section id="home" class="view active">
-<div class="hero"><div class="eyebrow">日本旅行 · DAY 1</div><h1>今天开始，<br>开口说日语。</h1><p>专为旅行设计。学完就能在机场、餐厅、酒店和车站直接用。</p><button class="primary" onclick="openRestaurantHub()">继续学习 →</button></div>
+<div class="hero"><div class="eyebrow" id="homeEyebrow">日本旅行 · 准备中</div><h1 id="homeHeroTitle">提前准备，<br>到了日本就会用。</h1><p id="homeHeroSub">告诉 Tabiji 你的出发日期，我们会按“什么时候最需要用到”安排学习。</p><button class="primary" onclick="openTripSetup()">设置旅行日期 →</button></div><div id="homeTripPlan"></div>
 <div class="section-title">旅行场景</div>
 <div class="scenes">
 <button class="scene" onclick="openRestaurantHub()"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
@@ -58,7 +58,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <button class="scene" onclick="openExtraHub()"><div class="emoji">✈️</div><b>机场</b><small>入境、行李、登机</small></button>
 <button class="scene" onclick="openExtraHub()"><div class="emoji">🏪</div><b>便利店</b><small>加热、付款、买东西</small></button>
 <button class="scene" onclick="openExtraHub()"><div class="emoji">💊</div><b>药妆店</b><small>找药、说明、结账</small></button>
-</div><div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
+</div><div class="section-title">现在最值得学</div><div id="priorityHome"></div>
 </section>
 
 <section id="daily" class="view">
@@ -70,13 +70,12 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 
 <section id="trip" class="view">
 <div class="topbar"><button class="back" onclick="goBack()">‹</button><div class="lesson-title">日本旅行计划</div></div>
-<div class="phrase-card"><b>出发前，学最需要的。</b><div class="tip">Tabiji 会按照旅行时间，把餐厅、酒店、交通、购物等内容排成一个轻量学习计划。</div></div>
-<div class="section-label">你的旅行还有多久？</div>
-<div class="lesson-grid">
-<button class="lesson-pick" onclick="setTripPlan(7)"><b>⚡ 7 天</b><small>每天约 10 分钟 · 旅行生存冲刺</small></button>
-<button class="lesson-pick" onclick="setTripPlan(14)"><b>🔥 14 天</b><small>每天约 10 分钟 · 覆盖主要旅行场景</small></button>
-<button class="lesson-pick" onclick="setTripPlan(30)"><b>🌿 30 天</b><small>每天约 10 分钟 · 完整旅行准备</small></button>
-</div>
+<div class="phrase-card"><b>出发前，按使用时间安排学习</b><div class="tip">越接近真正要用到的场景，优先级越高。提前很久开始时，Tabiji 会先铺基础，再逐步进入实战。</div></div>
+<div class="section-label">🇯🇵 你的出发日期</div>
+<div class="plan-card"><input id="tripDateInput" type="date" style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #ddd;border-radius:14px;font-size:17px;background:#fff"><button class="plan-btn" onclick="saveTripDate()">保存旅行日期</button></div>
+<div id="tripStatus"></div>
+<div class="section-label">学习节奏</div>
+<div class="plan-card"><b>每天学多少由你决定</b><p>5 分钟：只学最高优先级。<br>10 分钟：完成核心学习。<br>20 分钟：再加复习和情景对话。</p></div>
 <div id="tripPlanResult"></div>
 </section>
 
@@ -874,11 +873,25 @@ const tripCurriculum=[
  ['D13','🆘 出问题','听不懂、迷路、遗失物品'],
  ['D14','🎭 综合情景','完整日本旅行角色扮演']
 ];
-function setTripPlan(days){
-  const n=Math.min(days,14), list=tripCurriculum.slice(0,n);
-  const el=document.getElementById('tripPlanResult');
-  el.innerHTML='<div class="section-label">'+days+' 天计划</div><div class="plan-card"><p>每天约 10 分钟。先听核心表达，再做选择题，最后开口完成情景对话。</p><ol class="plan-list">'+list.map(x=>'<li><b>'+x[0]+' '+x[1]+'</b><br><small>'+x[2]+'</small></li>').join('')+'</ol><button class="plan-btn" onclick="goHome()">开始今天的学习</button></div>';
-}
+const TRIP_KEY='tabiji_trip_v1';
+const PRIORITY_CATEGORIES=[
+{id:'survival',icon:'🗣️',name:'生存日语',need:90,scenes:['restaurant','restaurant_arrive','restaurant_order','restaurant_payment','hotel_general','airport_general'],desc:'任何场景都能马上用到'},
+{id:'restaurant',icon:'🍜',name:'餐厅',need:30,scenes:['restaurant','restaurant_arrive','restaurant_order','restaurant_preferences','restaurant_payment','restaurant_takeout','restaurant_problem','restaurant_departure'],desc:'点餐、推荐、结账'},
+{id:'hotel',icon:'🏨',name:'酒店',need:21,scenes:['hotel_arrival','hotel_room','hotel_luggage','hotel_room_problem','hotel_requests','hotel_breakfast','hotel_late_checkout','hotel_checkout','hotel_taxi','hotel_general'],desc:'入住、房间、退房'},
+{id:'transport',icon:'🚆',name:'交通',need:14,scenes:['transport_station','transport_ticket','transport_train','transport_transfer','transport_shinkansen','transport_bus','transport_taxi','transport_lost','transport_delay','transport_access'],desc:'问路、换乘、买票'},
+{id:'shopping',icon:'🛍️',name:'购物',need:14,scenes:['shopping_clothes','shopping_price','shopping_stock','shopping_goods','shopping_taxfree','shopping_payment','shopping_bag','shopping_return','shopping_convenience','shopping_gift','shopping_departure','shopping_general'],desc:'价格、免税、付款'},
+{id:'convenience',icon:'🏪',name:'便利店',need:10,scenes:['convenience_food','convenience_payment','convenience_services','convenience_general'],desc:'加热、袋子、付款'},
+{id:'airport',icon:'✈️',name:'机场',need:7,scenes:['airport_arrival','airport_baggage','airport_departure','airport_security','airport_transport','airport_general'],desc:'入境、行李、登机'},
+{id:'drugstore',icon:'💊',name:'药妆店',need:10,scenes:['drugstore_medicine','drugstore_skincare','drugstore_price','drugstore_payment','drugstore_general','drugstore_general2'],desc:'找药、护肤、说明'}
+];
+function daysUntilTrip(){const d=localStorage.getItem(TRIP_KEY);if(!d)return null;const a=new Date(localDateKey()+'T12:00:00'),b=new Date(d+'T12:00:00');return Math.ceil((b-a)/86400000)}
+function openTripSetup(){showView('trip');const input=document.getElementById('tripDateInput'),saved=localStorage.getItem(TRIP_KEY);if(saved)input.value=saved;renderTripPlan()}
+function saveTripDate(){const input=document.getElementById('tripDateInput');if(!input.value)return;localStorage.setItem(TRIP_KEY,input.value);renderTripPlan();renderHomePriority()}
+function categoryPriority(cat,days){const deficit=cat.scenes.reduce((sum,s)=>{const ps=data[s]?.phrases||[];return sum+ps.reduce((n,_,i)=>n+(1-getMastery(s,i)/5),0)},0);const urgency=days===null?0:Math.max(0,cat.need-days);const lead=days===null?0:Math.max(0,cat.need*2-days);return Math.round(urgency*8+lead*2+deficit*.5)}
+function getPriorityCategories(){const days=daysUntilTrip();return PRIORITY_CATEGORIES.map(c=>({...c,score:categoryPriority(c,days)})).sort((a,b)=>b.score-a.score)}
+function renderHomePriority(){const el=document.getElementById('priorityHome');if(!el)return;const days=daysUntilTrip();if(days===null){el.innerHTML='<div class="phrase-card"><b>先告诉我你的旅行日期</b><div class="tip">提前几个月开始也没关系。Tabiji 会把“现在该学”和“以后再学”分开。</div><button class="plan-btn" onclick="openTripSetup()">设置出发日期 →</button></div>';return}const sorted=getPriorityCategories().slice(0,3);document.getElementById('homeEyebrow').innerHTML='日本旅行 · '+(days<0?'日期已过':(days===0?'今天出发！':'距离出发还有 <b>'+days+' 天</b>'));document.getElementById('homeHeroTitle').innerHTML=days<=7?'马上要出发了，<br>先把最重要的练会。':(days<=30?'越来越近了，<br>开始进入实战。':'还有充足时间，<br>按优先级慢慢学。');document.getElementById('homeHeroSub').textContent='Tabiji 会根据你什么时候真正需要用到日语，动态安排学习顺序。';el.innerHTML='<div class="priority-stack">'+sorted.map((x,i)=>'<button class="lesson-pick" onclick="openScene(\\''+x.scenes[0]+'\\')"><span>'+['🔥','🟠','🟡'][i]+'</span><b>'+x.icon+' '+x.name+'</b><small>'+x.desc+' · '+(i===0?'现在优先学习':i===1?'接下来学习':'可以慢慢学')+'</small></button>').join('')+'</div><button class="plan-btn" onclick="openTripSetup()">查看完整学习计划 →</button>'}
+function renderTripPlan(){const days=daysUntilTrip(),status=document.getElementById('tripStatus'),result=document.getElementById('tripPlanResult');if(!status||!result)return;if(days===null){status.innerHTML='';result.innerHTML='';return}const phase=days<=7?'🔥 最后冲刺':(days<=30?'🟠 实战阶段':(days<=60?'🟡 核心场景阶段':'🌿 基础铺垫阶段'));status.innerHTML='<div class="phrase-card"><b>'+phase+'</b><div class="tip">'+(days<0?'旅行日期已过去，请重新选择日期。':(days===0?'今天出发。优先复习机场、交通和生存日语。':'距离出发还有 <b>'+days+' 天</b>。学习顺序会随着日期接近自动变化。'))+'</div></div>';const sorted=getPriorityCategories(),now=sorted.slice(0,4),later=sorted.slice(4);result.innerHTML='<div class="section-label">🔥 现在优先</div>'+now.map(x=>'<div class="plan-card"><b>'+x.icon+' '+x.name+'</b><p>'+x.desc+'</p><small>建议提前 '+x.need+' 天开始系统学习</small></div>').join('')+'<div class="section-label">🌱 之后再学</div>'+later.map(x=>'<div class="plan-card"><b>'+x.icon+' '+x.name+'</b><p>'+x.desc+'</p><small>建议提前 '+x.need+' 天开始</small></div>').join('')}
+function setTripPlan(days){const d=new Date();d.setDate(d.getDate()+days);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');localStorage.setItem(TRIP_KEY,k);renderTripPlan();renderHomePriority()}
 const hotelLessons=[
  ['hotel_arrival','🛎️ 到达与入住','预订、护照、入住、房间'],
  ['hotel_room','🛏️ 房间与设施','Wi-Fi、早餐、电梯、设施'],
@@ -1386,5 +1399,6 @@ function speakText(t){
 }
 buildPhrasebook();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+renderHomePriority();
 </script>
 </body></html>
