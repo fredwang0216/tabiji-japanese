@@ -57,6 +57,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
 </section>
 
+<section id="daily" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
+<div class="phrase-card"><b id="dailyHeadline">今天学 5 句，开口说出来。</b><div class="tip" id="dailySub">完成听、记、说、情景四步，就完成今天的学习。</div></div>
+<div id="dailySteps" class="lesson-grid"></div>
+<div id="dailyProgress" style="margin:14px 0"></div>
+</section>
+
 <section id="trip" class="view">
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">日本旅行计划</div></div>
 <div class="phrase-card"><b>出发前，学最需要的。</b><div class="tip">Tabiji 会按照旅行时间，把餐厅、酒店、交通、购物等内容排成一个轻量学习计划。</div></div>
@@ -271,6 +278,35 @@ let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+const dailyTasks=[
+ {id:'listen',icon:'🔊',title:'听 5 句',desc:'先听今天的核心表达，熟悉声音和节奏。'},
+ {id:'learn',icon:'🧠',title:'记 5 句',desc:'用选择题确认你真的理解了。'},
+ {id:'speak',icon:'🎙️',title:'说 5 句',desc:'自己开口说一遍，练习真正旅行时会用到的表达。'},
+ {id:'roleplay',icon:'🍜',title:'情景对话',desc:'把今天学的句子放进真实旅行场景。'}
+];
+let dailyState=JSON.parse(localStorage.getItem('tabiji_daily')||'null')||{date:'',done:{listen:false,learn:false,speak:false,roleplay:false},streak:0};
+function localDateKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function ensureDaily(){
+ const today=localDateKey();
+ if(dailyState.date!==today){dailyState={date:today,done:{listen:false,learn:false,speak:false,roleplay:false},streak:dailyState.streak||0};saveDaily();}
+}
+function saveDaily(){localStorage.setItem('tabiji_daily',JSON.stringify(dailyState))}
+function openDaily(){
+ ensureDaily(); showView('daily'); renderDaily();
+}
+function renderDaily(){
+ const completed=Object.values(dailyState.done).filter(Boolean).length;
+ const el=document.getElementById('dailySteps');
+ el.innerHTML=dailyTasks.map((t,i)=>'<button class="lesson-pick" onclick="startDailyStep(\''+t.id+'\')"><span>'+(dailyState.done[t.id]?'✓':'›')+'</span><b>'+t.icon+' '+t.title+'</b><small>'+t.desc+'</small></button>').join('');
+ document.getElementById('dailyProgress').innerHTML='<div class="tip">今日进度：'+completed+' / 4</div><div class="progress"><div class="progress-bar" style="width:'+(completed*25)+'%"></div></div>';
+ if(completed===4){document.getElementById('dailyHeadline').textContent='🎉 今天完成了！';document.getElementById('dailySub').textContent='明天回来，Tabiji 会继续下一天的学习。';}
+}
+function startDailyStep(id){
+ if(id==='listen'){dailyState.done.listen=true;saveDaily();renderDaily();openScene('restaurant_order');return}
+ if(id==='learn'){dailyState.done.learn=true;saveDaily();renderDaily();openScene('restaurant_menu');return}
+ if(id==='speak'){dailyState.done.speak=true;saveDaily();openScene('restaurant_preferences');return}
+ if(id==='roleplay'){dailyState.done.roleplay=true;saveDaily();renderDaily();showView('practice');return}
+}
 const tripCurriculum=[
  ['D1','🗣️ 生存日语','问候、谢谢、请问、听不懂时怎么说'],
  ['D2','🍜 餐厅','入店、点餐、推荐、结账'],
