@@ -14,7 +14,7 @@
 header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-items:center} .brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.brand span{color:var(--accent)}.streak{background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:20px;font-size:13px}
 .hero{background:#191919;color:white;border-radius:28px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"旅";position:absolute;right:-8px;bottom:-35px;font-size:150px;font-weight:900;color:#ffffff0d}.eyebrow{font-size:12px;color:#d7a49b;font-weight:700;letter-spacing:1px}.hero h1{font-size:32px;line-height:1.12;margin:8px 0}.hero p{color:#c9c9c9;margin:0 0 20px;line-height:1.5}.primary{background:var(--accent);color:#fff;padding:13px 18px;border-radius:14px;font-weight:700}
 .section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lesson-grid{display:grid;gap:10px}.lesson-pick{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left}.lesson-pick b{display:block;font-size:16px}.lesson-pick small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.lesson-pick span{float:right;font-size:20px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
+.plan-grid{display:grid;gap:12px;margin-top:14px}.plan-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}.plan-card.pro{border:2px solid #111}.plan-card h3{margin:0 0 6px;font-size:18px}.plan-card p{margin:0 0 12px;color:var(--muted);line-height:1.5}.plan-price{font-size:24px;font-weight:800;margin-bottom:12px}.plan-list{margin:0;padding-left:20px;color:#333;line-height:1.8}.plan-btn{width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px;font-weight:700;background:#111;color:#fff}.plan-card.free .plan-btn{background:#eee;color:#111}.section-label{font-size:13px;color:var(--muted);font-weight:700;margin:22px 2px 8px}.lesson-grid{display:grid;gap:10px}.lesson-pick{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left}.lesson-pick b{display:block;font-size:16px}.lesson-pick small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.lesson-pick span{float:right;font-size:20px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
 .lesson{display:none}.lesson.active{display:block}.topbar{display:flex;align-items:center;gap:10px;margin:12px 0 18px}.back{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:14px}.lesson-title{font-size:23px;font-weight:800}.progress{height:5px;background:#e4ddd5;border-radius:9px;margin:8px 0 20px}.progress i{display:block;height:100%;width:25%;background:var(--accent);border-radius:9px}.phrase-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin-bottom:14px}.jp{font-size:31px;font-weight:700;line-height:1.35}.romaji{color:#8b867f;margin-top:8px}.cn{font-size:18px;margin-top:14px}.listen{margin-top:20px;background:#f3ece8;border-radius:15px;padding:12px 15px;color:#a83829;font-weight:700}.choices{display:grid;gap:10px;margin-top:14px}.choice{background:#fff;border:1px solid var(--line);padding:15px;border-radius:15px;text-align:left}.choice.correct{border-color:var(--green);background:#edf8f2}.choice.wrong{border-color:#d85a4a;background:#fff0ed}
 .feedback{display:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
 .feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}
@@ -55,6 +55,54 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <button class="scene" onclick="openScene('shopping')"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
+</section>
+
+<section id="plans" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">Tabiji 会员</div></div>
+<div class="phrase-card"><b>为旅行学日语，随时打开就能学。</b><div class="tip">核心旅行内容永久免费。Pro 解锁智能练习和个性化能力。无广告、无体力限制。</div></div>
+<div class="section-label">选择适合你的方式</div>
+<div class="plan-grid">
+  <div class="plan-card free">
+    <h3>🌱 Free</h3>
+    <p>把最实用的日本旅行日语免费学会。</p>
+    <div class="plan-price">S$0</div>
+    <ul class="plan-list">
+      <li>500+ 核心旅行表达</li>
+      <li>餐厅、酒店、交通、购物等场景</li>
+      <li>日语 · 罗马音 · 中文</li>
+      <li>听发音、选择题、跟读</li>
+      <li>基础情景对话</li>
+      <li>无广告 · 无体力限制</li>
+    </ul>
+    <button class="plan-btn" onclick="goHome()">开始免费学习</button>
+  </div>
+  <div class="plan-card pro">
+    <h3>✦ Tabiji Pro</h3>
+    <p>给真正想开口沟通的人。</p>
+    <div class="plan-price">S$4.99 <small>/ 月</small></div>
+    <ul class="plan-list">
+      <li>全部旅行学习内容</li>
+      <li>AI 口语纠错</li>
+      <li>AI 自由情景对话</li>
+      <li>个性化学习计划</li>
+      <li>薄弱点智能复习</li>
+      <li>完整学习数据</li>
+    </ul>
+    <button class="plan-btn" onclick="alert('Pro 支付功能将在正式上线时开放。')">即将推出</button>
+  </div>
+  <div class="plan-card">
+    <h3>✈️ Japan Trip Pass</h3>
+    <p>只想在出发前集中练一个月？</p>
+    <div class="plan-price">S$9.99 <small>/ 30 天</small></div>
+    <ul class="plan-list">
+      <li>全部旅行场景</li>
+      <li>30 天旅行冲刺计划</li>
+      <li>AI 口语练习</li>
+      <li>真实旅行情景模拟</li>
+    </ul>
+    <button class="plan-btn" onclick="alert('Trip Pass 将在正式上线时开放。')">即将推出</button>
+  </div>
+</div>
 </section>
 
 <section id="restaurantHub" class="view">
