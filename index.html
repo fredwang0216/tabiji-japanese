@@ -14,7 +14,7 @@
 header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-items:center} .brand{font-weight:800;font-size:24px;letter-spacing:-.5px}.brand span{color:var(--accent)}.streak{background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:20px;font-size:13px}
 .hero{background:#191919;color:white;border-radius:28px;padding:26px 24px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"旅";position:absolute;right:-8px;bottom:-35px;font-size:150px;font-weight:900;color:#ffffff0d}.eyebrow{font-size:12px;color:#d7a49b;font-weight:700;letter-spacing:1px}.hero h1{font-size:32px;line-height:1.12;margin:8px 0}.hero p{color:#c9c9c9;margin:0 0 20px;line-height:1.5}.primary{background:var(--accent);color:#fff;padding:13px 18px;border-radius:14px;font-weight:700}
 .section-title{font-size:18px;font-weight:800;margin:22px 2px 12px}.scenes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.plan-grid{display:grid;gap:12px;margin-top:14px}.plan-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}.plan-card.pro{border:2px solid #111}.plan-card h3{margin:0 0 6px;font-size:18px}.plan-card p{margin:0 0 12px;color:var(--muted);line-height:1.5}.plan-price{font-size:24px;font-weight:800;margin-bottom:12px}.plan-list{margin:0;padding-left:20px;color:#333;line-height:1.8}.plan-btn{width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px;font-weight:700;background:#111;color:#fff}.plan-card.free .plan-btn{background:#eee;color:#111}.section-label{font-size:13px;color:var(--muted);font-weight:700;margin:22px 2px 8px}.lesson-grid{display:grid;gap:10px}.lesson-pick{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left}.lesson-pick b{display:block;font-size:16px}.lesson-pick small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.lesson-pick span{float:right;font-size:20px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
+.plan-grid{display:grid;gap:12px;margin-top:14px}.plan-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}.plan-card.pro{border:2px solid #111}.plan-card h3{margin:0 0 6px;font-size:18px}.plan-card p{margin:0 0 12px;color:var(--muted);line-height:1.5}.plan-price{font-size:24px;font-weight:800;margin-bottom:12px}.plan-list{margin:0;padding-left:20px;color:#333;line-height:1.8}.plan-btn{width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px;font-weight:700;background:#111;color:#fff}.plan-card.free .plan-btn{background:#eee;color:#111}.mastery{display:flex;align-items:center;gap:10px;margin-top:12px}.mastery-bar{height:7px;background:#eee;border-radius:99px;overflow:hidden;flex:1}.mastery-fill{height:100%;background:#111}.mastery-stars{font-size:12px;letter-spacing:1px;white-space:nowrap}.section-label{font-size:13px;color:var(--muted);font-weight:700;margin:22px 2px 8px}.lesson-grid{display:grid;gap:10px}.lesson-pick{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left}.lesson-pick b{display:block;font-size:16px}.lesson-pick small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.lesson-pick span{float:right;font-size:20px}.scene{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left;min-height:128px}.scene .emoji{font-size:28px}.scene b{display:block;margin-top:12px;font-size:16px}.scene small{display:block;color:var(--muted);margin-top:4px}
 .lesson{display:none}.lesson.active{display:block}.topbar{display:flex;align-items:center;gap:10px;margin:12px 0 18px}.back{background:#fff;border:1px solid var(--line);width:42px;height:42px;border-radius:14px}.lesson-title{font-size:23px;font-weight:800}.progress{height:5px;background:#e4ddd5;border-radius:9px;margin:8px 0 20px}.progress i{display:block;height:100%;width:25%;background:var(--accent);border-radius:9px}.phrase-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin-bottom:14px}.jp{font-size:31px;font-weight:700;line-height:1.35}.romaji{color:#8b867f;margin-top:8px}.cn{font-size:18px;margin-top:14px}.listen{margin-top:20px;background:#f3ece8;border-radius:15px;padding:12px 15px;color:#a83829;font-weight:700}.choices{display:grid;gap:10px;margin-top:14px}.choice{background:#fff;border:1px solid var(--line);padding:15px;border-radius:15px;text-align:left}.choice.correct{border-color:var(--green);background:#edf8f2}.choice.wrong{border-color:#d85a4a;background:#fff0ed}
 .feedback{display:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
 .feedback.show{display:block}.feedback-title{font-weight:800;font-size:16px}
@@ -61,7 +61,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">今天的 10 分钟</div></div>
 <div class="phrase-card"><b id="dailyHeadline">今天学 5 句，开口说出来。</b><div class="tip" id="dailySub">完成听、记、说、情景四步，就完成今天的学习。</div></div>
 <div id="dailySteps" class="lesson-grid"></div>
-<div id="dailyProgress" style="margin:14px 0"></div>
+<div id="dailyProgress" style="margin:14px 0"></div><div class="section-label">你最需要复习的 5 句</div><div id="weakReview" class="lesson-grid"></div>
 </section>
 
 <section id="trip" class="view">
@@ -278,6 +278,35 @@ let scene="restaurant",idx=0;
 let lastSpeechEnd=0;
 let activeRecognition=null;
 function showView(id,btn){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+const MASTERY_KEY='tabiji_mastery_v1';
+let mastery=JSON.parse(localStorage.getItem(MASTERY_KEY)||'{}');
+function saveMastery(){localStorage.setItem(MASTERY_KEY,JSON.stringify(mastery))}
+function phraseKey(s,i){return s+':'+i}
+function getMastery(s,i){return Math.max(0,Math.min(5,Number(mastery[phraseKey(s,i)]||0)))}
+function changeMastery(s,i,delta){
+ const k=phraseKey(s,i); mastery[k]=Math.max(0,Math.min(5,getMastery(s,i)+delta)); saveMastery();
+}
+function masteryStars(v){return '★'.repeat(v)+'☆'.repeat(5-v)}
+function masteryHTML(s,i){
+ const v=getMastery(s,i);
+ return '<div class="mastery"><div class="mastery-stars">'+masteryStars(v)+'</div><div class="mastery-bar"><div class="mastery-fill" style="width:'+(v*20)+'%"></div></div></div>';
+}
+function recordLessonResult(s,i,ok,mode){
+ let delta=ok?1:-1;
+ if(mode==='speak'&&ok) delta=2;
+ changeMastery(s,i,delta);
+}
+function weakestPhrases(limit=5){
+ const rows=[];
+ Object.keys(data).forEach(s=>{
+  (data[s].phrases||[]).forEach((p,i)=>rows.push({s,i,jp:p[0],romaji:p[1],cn:p[2],score:getMastery(s,i)}));
+ });
+ return rows.sort((a,b)=>a.score-b.score).slice(0,limit);
+}
+function renderMasterySummary(){
+ const weak=weakestPhrases(5);
+ return weak.map((p,i)=>'<button class="lesson-pick" onclick="openScene(\''+p.s+'\')"><span>'+p.score+'/5</span><b>'+(i+1)+'. '+p.jp+'</b><small>'+p.cn+' · '+p.romaji+'</small>'+masteryHTML(p.s,p.i)+'</button>').join('');
+}
 const dailyTasks=[
  {id:'listen',icon:'🔊',title:'听 5 句',desc:'先听今天的核心表达，熟悉声音和节奏。'},
  {id:'learn',icon:'🧠',title:'记 5 句',desc:'用选择题确认你真的理解了。'},
@@ -299,6 +328,7 @@ function renderDaily(){
  const el=document.getElementById('dailySteps');
  el.innerHTML=dailyTasks.map((t,i)=>'<button class="lesson-pick" onclick="startDailyStep(\''+t.id+'\')"><span>'+(dailyState.done[t.id]?'✓':'›')+'</span><b>'+t.icon+' '+t.title+'</b><small>'+t.desc+'</small></button>').join('');
  document.getElementById('dailyProgress').innerHTML='<div class="tip">今日进度：'+completed+' / 4</div><div class="progress"><div class="progress-bar" style="width:'+(completed*25)+'%"></div></div>';
+ document.getElementById('weakReview').innerHTML=renderMasterySummary();
  if(completed===4){document.getElementById('dailyHeadline').textContent='🎉 今天完成了！';document.getElementById('dailySub').textContent='明天回来，Tabiji 会继续下一天的学习。';}
 }
 function startDailyStep(id){
@@ -580,6 +610,7 @@ function showDialogueReview(){
 function processDialogueAnswer(heard){
   const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
   const ok=evaluateDialogue(heard,turn);
+recordLessonResult('restaurant_dialogue',dialogueTurn,ok,'speak');
   dialogueResults.push({ok,heard,answer:turn.answer,romaji:turn.answerRomaji,chinese:turn.chinese});
   document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
   document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
