@@ -51,7 +51,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="scenes">
 <button class="scene" onclick="openRestaurantHub()"><div class="emoji">🍜</div><b>餐厅</b><small>点餐、结账、问推荐</small></button>
 <button class="scene" onclick="openHotelHub()"><div class="emoji">🏨</div><b>酒店</b><small>入住、行李、退房</small></button>
-<button class="scene" onclick="openScene('transport')"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
+<button class="scene" onclick="openTransportHub()"><div class="emoji">🚆</div><b>交通</b><small>车站、买票、问路</small></button>
 <button class="scene" onclick="openScene('shopping')"><div class="emoji">🛍️</div><b>购物</b><small>价格、试穿、付款</small></button>
 </div>
 <div class="section-title">今日目标</div><div class="phrase-card"><b>5 句旅行日语</b><div class="tip">先听 → 跟读 → 选择正确表达 → 最后用 AI 情景对话。</div></div>
@@ -135,6 +135,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 <div class="phrase-card"><b>🏨 选择你想练的酒店场景</b><div class="tip">入住、行李、设施、房间问题、早餐、退房，一次覆盖。</div></div>
 <div class="lesson-grid" id="hotelLessonList"></div>
 <div class="plan-card" style="margin-top:12px"><b>🎭 酒店情景对话</b><p>从前台办理入住，一路练到退房。</p><button class="plan-btn" onclick="openHotelDialogue()">开始酒店对话</button></div>
+</section>
+
+<section id="transportHub" class="view">
+<div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">交通 · 场景训练</div></div>
+<div class="phrase-card"><b>🚆 选择你想练的交通场景</b><div class="tip">车站、买票、换乘、新干线、出租车、问路，一次覆盖。</div></div>
+<div class="lesson-grid" id="transportLessonList"></div>
+<div class="plan-card" style="margin-top:12px"><b>🎭 车站情景对话</b><p>从进站买票，到确认站台、换乘、到达目的地。</p><button class="plan-btn" onclick="openTransportDialogue()">开始交通对话</button></div>
 </section>
 
 <section id="lesson" class="view lesson">
@@ -371,6 +378,96 @@ transport:{title:"交通 · 车站",phrases:[
 ["東京駅はどこですか？","Tōkyō-eki wa doko desu ka?","东京站在哪里？",["東京駅はどこですか？","これは何ですか？","何名様ですか？"],0],
 ["この電車は新宿に行きますか？","Kono densha wa Shinjuku ni ikimasu ka?","这班电车去新宿吗？",["切符はいくらですか？","この電車は新宿に行きますか？","予約しています。"],1],
 ["切符を一枚ください。","Kippu o ichimai kudasai.","请给我一张票。",["切符を一枚ください。","これをください。","お会計お願いします。"],0]]},
+transport_station:{title:"车站与方向",phrases:[
+["東京駅はどこですか？","Tōkyō-eki wa doko desu ka?","东京站在哪里？",["東京駅はどこですか？","東京駅は何時ですか？","東京駅はいくらですか？"],0],
+["駅はどこですか？","Eki wa doko desu ka?","车站在哪里？",["駅はどこですか？","駅は何時ですか？","駅はいくらですか？"],0],
+["改札はどこですか？","Kaisatsu wa doko desu ka?","检票口在哪里？",["改札はどこですか？","電車はどこですか？","切符はどこですか？"],0],
+["出口はどこですか？","Deguchi wa doko desu ka?","出口在哪里？",["出口はどこですか？","入口はいくらですか？","出口は何時ですか？"],0],
+["この駅に行きたいです。","Kono eki ni ikitai desu.","我想去这个车站。",["この駅に行きたいです。","この駅を食べたいです。","この駅を買いたいです。"],0],
+["どの方向ですか？","Dono hōkō desu ka?","往哪个方向？",["どの方向ですか？","どの電車ですか？","どの切符ですか？"],0],
+["何番線ですか？","Nan-bansen desu ka?","几号站台？",["何番線ですか？","何番出口ですか？","何番切符ですか？"],0],
+["この電車はどこから出ますか？","Kono densha wa doko kara demasu ka?","这班电车从哪里发车？",["この電車はどこから出ますか？","この電車はいくらですか？","この電車は何人ですか？"],0]]},
+transport_ticket:{title:"买票与车费",phrases:[
+["切符を一枚ください。","Kippu o ichimai kudasai.","请给我一张票。",["切符を一枚ください。","切符を一つ食べます。","切符を二枚返します。"],0],
+["新宿までいくらですか？","Shinjuku made ikura desu ka?","到新宿多少钱？",["新宿までいくらですか？","新宿まで何時ですか？","新宿まで何人ですか？"],0],
+["新宿までの切符をください。","Shinjuku made no kippu o kudasai.","请给我一张到新宿的票。",["新宿までの切符をください。","新宿までの水をください。","新宿までの部屋をください。"],0],
+["片道でお願いします。","Katamichi de onegai shimasu.","请买单程票。",["片道でお願いします。","往復でお願いします。","現金でお願いします。"],0],
+["往復でお願いします。","Ōfuku de onegai shimasu.","请买往返票。",["往復でお願いします。","片道でお願いします。","カードでお願いします。"],0],
+["ICカードは使えますか？","Ai-shī kādo wa tsukaemasu ka?","可以使用交通IC卡吗？",["ICカードは使えますか？","ICカードはありますか？","ICカードを買えますか？"],0],
+["料金はいくらですか？","Ryōkin wa ikura desu ka?","费用是多少？",["料金はいくらですか？","料金はどこですか？","料金は何時ですか？"],0],
+["子ども料金はいくらですか？","Kodomo ryōkin wa ikura desu ka?","儿童票多少钱？",["子ども料金はいくらですか？","子どもはどこですか？","子どもは何時ですか？"],0]]},
+transport_train:{title:"确认列车",phrases:[
+["この電車は新宿に行きますか？","Kono densha wa Shinjuku ni ikimasu ka?","这班电车去新宿吗？",["この電車は新宿に行きますか？","この電車は新宿ですか？","この電車は何人ですか？"],0],
+["この電車は東京駅に行きますか？","Kono densha wa Tōkyō-eki ni ikimasu ka?","这班电车去东京站吗？",["この電車は東京駅に行きますか？","この電車は東京駅ですか？","この電車は何時ですか？"],0],
+["次の電車は何時ですか？","Tsugi no densha wa nanji desu ka?","下一班车几点？",["次の電車は何時ですか？","次の駅は何時ですか？","次の切符は何時ですか？"],0],
+["これは急行ですか？","Kore wa kyūkō desu ka?","这是快车吗？",["これは急行ですか？","これは駅ですか？","これは切符ですか？"],0],
+["これは各駅停車ですか？","Kore wa kakueki teisha desu ka?","这是每站都停的车吗？",["これは各駅停車ですか？","これは新幹線ですか？","これはタクシーですか？"],0],
+["この電車に乗ってもいいですか？","Kono densha ni notte mo ii desu ka?","我可以坐这班车吗？",["この電車に乗ってもいいですか？","この電車を買ってもいいですか？","この電車を食べてもいいですか？"],0],
+["何駅ですか？","Nan-eki desu ka?","还有几站？",["何駅ですか？","何時ですか？","何人ですか？"],0],
+["どこで降りますか？","Doko de orimasu ka?","在哪里下车？",["どこで降りますか？","どこで買いますか？","どこで食べますか？"],0]]},
+transport_transfer:{title:"换乘",phrases:[
+["乗り換えはどこですか？","Norikae wa doko desu ka?","在哪里换乘？",["乗り換えはどこですか？","乗り換えはいくらですか？","乗り換えは何人ですか？"],0],
+["何線に乗り換えますか？","Nan-sen ni norikaemasu ka?","换乘哪条线？",["何線に乗り換えますか？","何時に乗り換えますか？","何人に乗り換えますか？"],0],
+["次はどの電車ですか？","Tsugi wa dono densha desu ka?","下一班应该坐哪辆车？",["次はどの電車ですか？","次はどの駅ですか？","次はどの切符ですか？"],0],
+["この電車から乗り換えます。","Kono densha kara norikaemasu.","我要从这班车换乘。",["この電車から乗り換えます。","この駅から食べます。","この切符から買います。"],0],
+["乗り換えに何分かかりますか？","Norikae ni nan-pun kakarimasu ka?","换乘需要几分钟？",["乗り換えに何分かかりますか？","乗り換えに何人いますか？","乗り換えにいくら食べますか？"],0],
+["この駅で乗り換えますか？","Kono eki de norikaemasu ka?","在这个站换乘吗？",["この駅で乗り換えますか？","この駅で食べますか？","この駅で買いますか？"],0],
+["間に合いますか？","Maniaimasu ka?","来得及吗？",["間に合いますか？","分かりますか？","使いますか？"],0],
+["乗り換えが分かりません。","Norikae ga wakarimasen.","我不知道怎么换乘。",["乗り換えが分かりません。","切符が分かりません。","駅が分かりません。"],0]]},
+transport_shinkansen:{title:"新干线",phrases:[
+["新幹線の切符を買いたいです。","Shinkansen no kippu o kaitai desu.","我想买新干线车票。",["新幹線の切符を買いたいです。","新幹線の水を買いたいです。","新幹線の部屋を買いたいです。"],0],
+["東京から京都までお願いします。","Tōkyō kara Kyōto made onegai shimasu.","请买从东京到京都的票。",["東京から京都までお願いします。","東京から京都まで食べます。","東京から京都まで寝ます。"],0],
+["指定席をお願いします。","Shitei-seki o onegai shimasu.","请给我指定席。",["指定席をお願いします。","自由席をお願いします。","出口をお願いします。"],0],
+["自由席をお願いします。","Jiyū-seki o onegai shimasu.","请给我自由席。",["自由席をお願いします。","指定席をお願いします。","駅をお願いします。"],0],
+["何時の新幹線ですか？","Nanji no shinkansen desu ka?","几点的新干线？",["何時の新幹線ですか？","何番の新幹線ですか？","何人の新幹線ですか？"],0],
+["何番ホームですか？","Nan-ban hōmu desu ka?","几号站台？",["何番ホームですか？","何番ホテルですか？","何番切符ですか？"],0],
+["荷物を置いてもいいですか？","Nimotsu o oite mo ii desu ka?","可以放行李吗？",["荷物を置いてもいいですか？","荷物を食べてもいいですか？","荷物を買ってもいいですか？"],0],
+["京都までどのくらいかかりますか？","Kyōto made dono kurai kakarimasu ka?","到京都大概要多久？",["京都までどのくらいかかりますか？","京都まで何人ですか？","京都までいくら食べますか？"],0]]},
+transport_bus:{title:"公交与巴士",phrases:[
+["バス停はどこですか？","Basu-tei wa doko desu ka?","公交车站在哪里？",["バス停はどこですか？","バスは何人ですか？","バス停はいくらですか？"],0],
+["このバスは渋谷に行きますか？","Kono basu wa Shibuya ni ikimasu ka?","这辆公交去涩谷吗？",["このバスは渋谷に行きますか？","このバスは何時ですか？","このバスは何人ですか？"],0],
+["どこで降りますか？","Doko de orimasu ka?","在哪里下车？",["どこで降りますか？","どこで乗りますか？","どこで買いますか？"],0],
+["次のバスは何時ですか？","Tsugi no basu wa nanji desu ka?","下一班公交几点？",["次のバスは何時ですか？","次のバスは何人ですか？","次のバスはいくらですか？"],0],
+["バス料金はいくらですか？","Basu ryōkin wa ikura desu ka?","公交车费多少钱？",["バス料金はいくらですか？","バス料金はどこですか？","バス料金は何時ですか？"],0],
+["降りる場所を教えてください。","Oriru basho o oshiete kudasai.","请告诉我下车地点。",["降りる場所を教えてください。","乗る場所を教えてください。","食べる場所を教えてください。"],0],
+["ここで降ります。","Koko de orimasu.","我在这里下车。",["ここで降ります。","ここで乗ります。","ここで買います。"],0],
+["次で降ります。","Tsugi de orimasu.","我下一站下车。",["次で降ります。","次で乗ります。","次で買います。"],0]]},
+transport_taxi:{title:"出租车",phrases:[
+["タクシー乗り場はどこですか？","Takushī noriba wa doko desu ka?","出租车乘车点在哪里？",["タクシー乗り場はどこですか？","タクシー料金はどこですか？","タクシーは何人ですか？"],0],
+["東京駅までお願いします。","Tōkyō-eki made onegai shimasu.","请送我到东京站。",["東京駅までお願いします。","東京駅からお願いします。","東京駅をお願いします。"],0],
+["ここまでお願いします。","Koko made onegai shimasu.","请送我到这里。",["ここまでお願いします。","ここからお願いします。","ここをお願いします。"],0],
+["この住所までお願いします。","Kono jūsho made onegai shimasu.","请送我到这个地址。",["この住所までお願いします。","この住所からお願いします。","この住所を食べます。"],0],
+["カードは使えますか？","Kādo wa tsukaemasu ka?","可以刷卡吗？",["カードは使えますか？","カードはありますか？","カードはいくらですか？"],0],
+["ここで止めてください。","Koko de tomete kudasai.","请在这里停车。",["ここで止めてください。","ここで待ってください。","ここで食べてください。"],0],
+["領収書をください。","Ryōshūsho o kudasai.","请给我收据。",["領収書をください。","切符をください。","鍵をください。"],0],
+["ありがとうございました。","Arigatō gozaimashita.","谢谢。",["ありがとうございました。","いらっしゃいませ。","いただきます。"],0]]},
+transport_lost:{title:"迷路与求助",phrases:[
+["道に迷いました。","Michi ni mayoimashita.","我迷路了。",["道に迷いました。","道があります。","道を買いました。"],0],
+["駅までどう行けばいいですか？","Eki made dō ikeba ii desu ka?","去车站怎么走？",["駅までどう行けばいいですか？","駅まで何を食べればいいですか？","駅まで何人ですか？"],0],
+["地図を見せてもらえますか？","Chizu o misete moraemasu ka?","可以给我看一下地图吗？",["地図を見せてもらえますか？","切符を見せてもらえますか？","部屋を見せてもらえますか？"],0],
+["ここはどこですか？","Koko wa doko desu ka?","这里是哪里？",["ここはどこですか？","ここはいくらですか？","ここは何人ですか？"],0],
+["この住所に行きたいです。","Kono jūsho ni ikitai desu.","我想去这个地址。",["この住所に行きたいです。","この住所を食べたいです。","この住所を買いたいです。"],0],
+["近いですか？","Chikai desu ka?","近吗？",["近いですか？","高いですか？","遠いですか？"],0],
+["歩いて行けますか？","Aruite ikemasu ka?","可以走路去吗？",["歩いて行けますか？","歩いて食べますか？","歩いて買いますか？"],0],
+["助けてください。","Tasukete kudasai.","请帮帮我。",["助けてください。","教えてください。","待ってください。"],0]]},
+transport_delay:{title:"延误与问题",phrases:[
+["電車が遅れています。","Densha ga okurete imasu.","电车晚点了。",["電車が遅れています。","電車があります。","電車を食べています。"],0],
+["何分遅れていますか？","Nan-pun okurete imasu ka?","晚点多少分钟？",["何分遅れていますか？","何人遅れていますか？","何駅遅れていますか？"],0],
+["この電車は運休ですか？","Kono densha wa unkyū desu ka?","这班车停运了吗？",["この電車は運休ですか？","この電車は無料ですか？","この電車は駅ですか？"],0],
+["どうすればいいですか？","Dō sureba ii desu ka?","我该怎么办？",["どうすればいいですか？","どこすればいいですか？","何人すればいいですか？"],0],
+["別の電車に乗れますか？","Betsu no densha ni noremasu ka?","可以坐另一班车吗？",["別の電車に乗れますか？","別の電車を食べますか？","別の電車を買いますか？"],0],
+["払い戻しできますか？","Haraimodoshi dekimasu ka?","可以退款吗？",["払い戻しできますか？","乗り換えできますか？","チェックインできますか？"],0],
+["どこで聞けばいいですか？","Doko de kikeba ii desu ka?","我应该去哪里询问？",["どこで聞けばいいですか？","どこで食べればいいですか？","どこで寝ればいいですか？"],0],
+["もう一度お願いします。","Mō ichido onegai shimasu.","请再说一次。",["もう一度お願いします。","もう帰ります。","もう食べません。"],0]]},
+transport_access:{title:"IC卡与进出站",phrases:[
+["ICカードをチャージしたいです。","Ai-shī kādo o chāji shitai desu.","我想给IC卡充值。",["ICカードをチャージしたいです。","ICカードを買いたいです。","ICカードを返したいです。"],0],
+["チャージはいくらからですか？","Chāji wa ikura kara desu ka?","最低充值多少钱？",["チャージはいくらからですか？","チャージは何時からですか？","チャージはどこからですか？"],0],
+["残高はいくらですか？","Zandaka wa ikura desu ka?","余额是多少？",["残高はいくらですか？","残高はどこですか？","残高は何時ですか？"],0],
+["ICカードが使えません。","Ai-shī kādo ga tsukaemasen.","IC卡不能使用。",["ICカードが使えません。","ICカードがあります。","ICカードを食べます。"],0],
+["カードをタッチすればいいですか？","Kādo o tacchi sureba ii desu ka?","刷卡就可以吗？",["カードをタッチすればいいですか？","カードを買えばいいですか？","カードを食べればいいですか？"],0],
+["どこでチャージできますか？","Doko de chāji dekimasu ka?","在哪里可以充值？",["どこでチャージできますか？","どこで食べられますか？","どこで寝られますか？"],0],
+["入場できますか？","Nyūjō dekimasu ka?","可以进站吗？",["入場できますか？","入場は何人ですか？","入場はいくら食べますか？"],0],
+["出場できません。","Shutsujō dekimasen.","出不了站。",["出場できません。","出場できます。","出場しました。"],0]]},
 shopping:{title:"购物 · 买东西",phrases:[
 ["これはいくらですか？","Kore wa ikura desu ka?","这个多少钱？",["これはいくらですか？","おすすめは何ですか？","大丈夫です。"],0],
 ["これを試着してもいいですか？","Kore o shichaku shite mo ii desu ka?","可以试穿这个吗？",["これを試着してもいいですか？","これをください。","予約しています。"],0],
@@ -523,6 +620,32 @@ const hotelDialogue=[
  {question:'Wi-Fiのパスワードは何ですか？',questionRomaji:'Wi-Fi no pasuwādo wa nan desu ka?',questionChinese:'Wi-Fi 密码是什么？',answer:'教えてください。',answerRomaji:'Oshiete kudasai.',alternatives:['教えてください','お願いします。'],chinese:'请告诉我。',next:'ありがとうございます。',hint:'说“请告诉我”。'},
  {question:'ありがとうございます。',questionRomaji:'Arigatō gozaimasu.',questionChinese:'谢谢。',answer:'こちらこそ。',answerRomaji:'Kochira koso.',alternatives:['こちらこそ。','ありがとうございます。'],chinese:'我也谢谢您。',next:'またお越しください。',hint:'回应感谢可以说“こちらこそ”。'},
  {question:'またお越しください。',questionRomaji:'Mata o-koshi kudasai.',questionChinese:'欢迎下次再来。',answer:'ありがとうございました。',answerRomaji:'Arigatō gozaimashita.',alternatives:['ありがとうございました。','ありがとうございます。'],chinese:'谢谢您。',next:'',hint:'离开时礼貌道谢。'}
+];
+const transportLessons=[
+ ['transport_station','🚉 车站与方向','车站、检票口、出口、站台'],
+ ['transport_ticket','🎫 买票与车费','票价、单程、往返、IC卡'],
+ ['transport_train','🚆 确认列车','目的地、快车、下一班车'],
+ ['transport_transfer','🔄 换乘','线路、换乘时间、赶不赶得上'],
+ ['transport_shinkansen','🚄 新干线','指定席、自由席、站台、行李'],
+ ['transport_bus','🚌 公交与巴士','车站、票价、上下车'],
+ ['transport_taxi','🚕 出租车','目的地、地址、付款'],
+ ['transport_lost','🧭 迷路与求助','问路、地图、求助'],
+ ['transport_delay','⚠️ 延误与问题','晚点、停运、退款'],
+ ['transport_access','💳 IC卡与进出站','充值、余额、进出站']
+];
+function openTransportHub(){
+ showView('transportHub');
+ document.getElementById('transportLessonList').innerHTML=transportLessons.map(([id,icon,title])=>'<button class="lesson-pick" onclick="openScene(\''+id+'\')"><span>›</span><b>'+icon+' '+title+'</b><small>8句 · '+(data[id]?.phrases.length||8)+'个核心表达</small></button>').join('');
+}
+const transportDialogue=[
+ {question:'すみません、新宿駅はどこですか？',questionRomaji:'Sumimasen, Shinjuku-eki wa doko desu ka?',questionChinese:'请问新宿站在哪里？',answer:'あちらです。',answerRomaji:'Achira desu.',alternatives:['あちらです','あっちです。','あっちです'],chinese:'在那边。',next:'何番線ですか？',hint:'指方向即可。'},
+ {question:'何番線ですか？',questionRomaji:'Nan-bansen desu ka?',questionChinese:'几号站台？',answer:'3番線です。',answerRomaji:'San-bansen desu.',alternatives:['3番線です','三番線です。'],chinese:'3号站台。',next:'新宿まで行きますか？',hint:'回答站台号码。'},
+ {question:'新宿まで行きますか？',questionRomaji:'Shinjuku made ikimasu ka?',questionChinese:'去新宿吗？',answer:'はい、行きます。',answerRomaji:'Hai, ikimasu.',alternatives:['はい、行きます。','はい。'],chinese:'是的，去。',next:'何駅ですか？',hint:'回答“はい”。'},
+ {question:'何駅ですか？',questionRomaji:'Nan-eki desu ka?',questionChinese:'还有几站？',answer:'3駅です。',answerRomaji:'San-eki desu.',alternatives:['3駅です','三駅です。'],chinese:'3站。',next:'乗り換えはありますか？',hint:'告诉对方还有几站。'},
+ {question:'乗り換えはありますか？',questionRomaji:'Norikae wa arimasu ka?',questionChinese:'需要换乘吗？',answer:'はい、あります。',answerRomaji:'Hai, arimasu.',alternatives:['はい、あります。','はい。'],chinese:'需要。',next:'何線に乗り換えますか？',hint:'回答“はい”。'},
+ {question:'何線に乗り換えますか？',questionRomaji:'Nan-sen ni norikaemasu ka?',questionChinese:'换乘哪条线？',answer:'山手線です。',answerRomaji:'Yamanote-sen desu.',alternatives:['山手線です','山手線です。'],chinese:'山手线。',next:'間に合いますか？',hint:'说线路名称。'},
+ {question:'間に合いますか？',questionRomaji:'Maniaimasu ka?',questionChinese:'来得及吗？',answer:'大丈夫です。',answerRomaji:'Daijōbu desu.',alternatives:['大丈夫です。','はい、大丈夫です。'],chinese:'没问题。',next:'ありがとうございました。',hint:'简单回答“大丈夫です”。'},
+ {question:'ありがとうございました。',questionRomaji:'Arigatō gozaimashita.',questionChinese:'谢谢。',answer:'どういたしまして。',answerRomaji:'Dō itashimashite.',alternatives:['どういたしまして。','こちらこそ。'],chinese:'不客气。',next:'',hint:'礼貌回应感谢。'}
 ];
 const restaurantLessons=[
  ['restaurant_arrive','🚪 入店与座位','进门、预约、人数、座位'],
@@ -700,6 +823,12 @@ let dialogueMode='restaurant';
 let dialogueTurn=0;
 let dialogueResults=[];
 
+function openTransportDialogue(){
+ dialogueMode='transport'; dialogueTurns=transportDialogue; dialogueTurn=0; dialogueResults=[];
+ showView('practice');
+ document.querySelector('#practice .lesson-title').textContent='交通情景对话';
+ resetDialogue();
+}
 function openHotelDialogue(){
  dialogueMode='hotel'; dialogueTurns=hotelDialogue; dialogueTurn=0; dialogueResults=[];
  showView('practice');
@@ -733,7 +862,12 @@ function evaluateDialogue(heard,turn){
     [/以上|はい/,/以上|はい/],
     [/カード/,/お願い|で/]
   ];
-  if(dialogueMode!=='restaurant') return false;
+  if(dialogueMode==='transport'){
+ const tr=[[/あちら|あっち/,/です/],[/3番線|三番線/,/です/],[/はい/,/行きます|/],[/3駅|三駅/,/です/],[/はい/,/あります/],[/山手線/,/です/],[/大丈夫/,/です/],[/どういたしまして|こちらこそ/,/./]];
+ const rule=tr[dialogueTurn];
+ return rule ? rule.every(re=>re.test(h)) : false;
+}
+if(dialogueMode!=='restaurant') return false;
   const rule=rules[dialogueTurn];
   return rule ? rule.every(re=>re.test(h)) : false;
 }
