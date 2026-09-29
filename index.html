@@ -23,7 +23,13 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 .dialogue-cn{color:var(--muted);margin-top:6px;line-height:1.5}
 .dialogue-why{color:#8b867f;font-size:14px;margin-top:4px;font-style:italic}
 .chat-listen{display:block;margin-top:10px;background:#fff;border:1px solid var(--line);color:#a83829;border-radius:11px;padding:8px 11px;font-size:13px;font-weight:700}
-.chat-listen:active{transform:scale(.98)}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
+.chat-listen:active{transform:scale(.98)}
+.text-answer{display:flex;gap:8px;margin:10px 0 4px}
+.text-answer input{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;font-size:16px;outline:none}
+.text-answer input:focus{border-color:var(--accent)}
+.text-answer button{background:#191919;color:#fff;border-radius:14px;padding:0 16px;font-weight:700}
+.progress-dialogue{height:5px;background:#e4ddd5;border-radius:9px;margin:12px 0 4px;overflow:hidden}
+.progress-dialogue i{display:block;height:100%;background:var(--accent);width:14.28%;transition:width .25s}.feedback-why{color:var(--muted);font-size:14px;line-height:1.55;margin-top:8px}
 .repeat{margin-top:14px;background:#191919;color:#fff;padding:13px 16px;border-radius:14px;font-weight:700;width:100%}
 .repeat.done{background:var(--green)}.repeat-status{text-align:center;color:var(--muted);font-size:13px;margin-top:8px;min-height:20px}
 .chat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:16px;min-height:360px}.bubble{max-width:85%;padding:12px 14px;border-radius:17px;margin:8px 0;line-height:1.45}.ai{background:#f0ece7}.me{background:#191919;color:#fff;margin-left:auto}.mic{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;display:block;margin:18px auto 8px;box-shadow:0 8px 20px #e94b3533}.status{text-align:center;color:var(--muted);font-size:13px}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(484px,calc(100% - 28px));background:#fffdfb;border:1px solid var(--line);border-radius:22px;padding:8px;display:flex;justify-content:space-around;box-shadow:0 10px 30px #0000000b}.nav button{background:none;padding:9px 18px;color:#8a867f;font-size:12px}.nav button.active{color:var(--ink);font-weight:800}.nav .ni{display:block;font-size:20px;margin-bottom:2px}
@@ -63,7 +69,7 @@ header{padding:22px 2px 18px;display:flex;justify-content:space-between;align-it
 
 <section id="practice" class="view">
 <div class="topbar"><button class="back" onclick="goHome()">‹</button><div class="lesson-title">情景对话</div></div>
-<div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div></div>
+<div class="phrase-card"><b>🍜 你正在东京餐厅</b><div class="tip">我来当店员，你用日语回答。先试着说出来。</div><div class="progress-dialogue"><i id="dialogueProgress"></i></div><div class="tip" id="dialogueStep">第 1 / 7 轮</div></div>
 <div class="chat" id="chat"><div class="bubble ai">いらっしゃいませ！<br>何名様ですか？<button class="chat-listen" onclick="speakDialogueQuestion(0)">🔊 再听一次</button></div><div class="bubble ai" style="font-size:13px">（欢迎光临！请问几位？）</div></div>
 <div id="dialogueFeedback" class="feedback"></div>
 <button class="mic" id="mic" onclick="startVoice()">🎙️</button><div class="status" id="status">点击麦克风，用日语回答</div>
@@ -306,6 +312,34 @@ function showDialogueFeedback(ok,heard,turn){
     '<div class="dialogue-cn">'+turn.chinese+'</div>'+
     (ok?'':'<div class="feedback-why" style="margin-top:10px">'+turn.hint+'</div>');
 }
+function submitTextAnswer(){
+  const input=document.getElementById('answerInput');
+  const heard=input.value.trim();
+  if(!heard)return;
+  input.value='';
+  processDialogueAnswer(heard);
+}
+function processDialogueAnswer(heard){
+  const turn=dialogueTurns[dialogueTurn]||dialogueTurns[0];
+  const ok=evaluateDialogue(heard,turn);
+  document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
+  document.getElementById('status').textContent=ok?'✓ 回答正确':'需要再练一次';
+  showDialogueFeedback(ok,heard,turn);
+  if(ok){
+    setTimeout(()=>{
+      const isLast=dialogueTurn>=dialogueTurns.length-1;
+      const nextText=isLast?'ありがとうございます！':turn.next;
+      document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+nextText+(isLast?'':'<button class="chat-listen" onclick="speakDialogueQuestion('+dialogueTurn+')">🔊 再听一次</button>')+'</div>');
+      const u=new SpeechSynthesisUtterance('いいですね！'+nextText);
+      u.lang='ja-JP';u.rate=.84;u.onend=()=>{lastSpeechEnd=Date.now()};
+      speechSynthesis.cancel();speechSynthesis.speak(u);
+      dialogueTurn++;
+      document.getElementById('dialogueProgress').style.width=((dialogueTurn/dialogueTurns.length)*100)+'%';
+      document.getElementById('dialogueStep').textContent=isLast?'🎉 7 / 7 轮完成':('第 '+(dialogueTurn+1)+' / '+dialogueTurns.length+' 轮');
+      if(isLast){document.getElementById('status').textContent='🎉 餐厅对话完成！';document.getElementById('mic').disabled=true;}
+    },700);
+  }
+}
 function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){document.getElementById('status').textContent='当前浏览器没有语音识别，请直接输入文字。';return}
@@ -322,25 +356,7 @@ function startVoice(){
     r.onresult=e=>{
       const heard=e.results[0][0].transcript.trim();
       activeRecognition=null;
-      const ok=evaluateDialogue(heard,turn);
-      document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble me">'+escapeHtml(heard)+'</div>');
-      status.textContent=ok?'✓ 回答正确':'需要再练一次';
-      showDialogueFeedback(ok,heard,turn);
-      if(ok){
-        setTimeout(()=>{
-          const isLast=dialogueTurn>=dialogueTurns.length-1;
-          const nextText=isLast?'ありがとうございます！':turn.next;
-          document.getElementById('chat').insertAdjacentHTML('beforeend','<div class="bubble ai">いいですね！😊<br>'+nextText+(isLast?'':'<button class="chat-listen" onclick="speakDialogueQuestion('+dialogueTurn+')">🔊 再听一次</button>')+'</div>');
-          const u=new SpeechSynthesisUtterance('いいですね！'+nextText);
-          u.lang='ja-JP';u.rate=.84;u.onend=()=>{lastSpeechEnd=Date.now()};
-          speechSynthesis.cancel();speechSynthesis.speak(u);
-          dialogueTurn++;
-          if(isLast){
-            status.textContent='🎉 餐厅对话完成！';
-            mic.disabled=true;
-          }
-        },700);
-      }
+      processDialogueAnswer(heard);
     };
     r.onerror=e=>{
       activeRecognition=null;mic.disabled=false;
